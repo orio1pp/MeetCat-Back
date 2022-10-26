@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import upc.fib.pes.grup121.model.Esdeveniment
+import upc.fib.pes.grup121.model.EsdevenimentDTO
 import upc.fib.pes.grup121.repository.EsdevenimentRepository
 import java.time.LocalDateTime
 
@@ -14,10 +15,10 @@ class EsdevenimentService(val repository: EsdevenimentRepository) {
 
     fun getById(id: Long): Esdeveniment = repository.findById(id).get()
 
-    fun create(esdeveniment: Esdeveniment): Esdeveniment {
+    fun create(esdeveniment: EsdevenimentDTO): Esdeveniment {
         esdeveniment.createdDate = LocalDateTime.now()
         esdeveniment.lastUpdate = esdeveniment.createdDate
-        return repository.save(esdeveniment)
+        return repository.save(Esdeveniment.fromDto(esdeveniment))
     }
 
     fun remove(id: Long) {
@@ -25,11 +26,10 @@ class EsdevenimentService(val repository: EsdevenimentRepository) {
         else throw ResponseStatusException(HttpStatus.NOT_FOUND)
     }
 
-    fun update(id: Long, esdeveniment: Esdeveniment): Esdeveniment {
+    fun update(id: Long, esdeveniment: EsdevenimentDTO): Esdeveniment {
         return if (repository.existsById(id)) {
-            esdeveniment.id = id
             esdeveniment.lastUpdate = LocalDateTime.now()
-            repository.save(esdeveniment)
+            repository.save(Esdeveniment.fromDto(esdeveniment, repository.findById(id).get()))
         } else throw ResponseStatusException(HttpStatus.NOT_FOUND)
     }
 }
