@@ -7,3 +7,6 @@
     | Darko Iglesias             | dallasi                  | @darko_ig                  |
     | Oriol Fort                 | oriolfm14                | @oriolfm                   |
     | Alejandro Lozano Aparicio  | AlejandroLozanoAparicio1 | @alejandro.lozano.aparicio |
+    
+## Taiga link
+ https://tree.taiga.io/project/alejandrolozanoaparicio-meetcat/backlog
