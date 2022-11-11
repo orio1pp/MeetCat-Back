@@ -16,20 +16,28 @@ class EventController (val service: EventService){
     }
 
     @GetMapping("/{id}")
-    fun getEvent(@PathVariable id: Long) = service.getById(id)
+    fun getEvent(@PathVariable id: Long) :Event{
+        return service.getById(id)
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun saveEvent(@RequestBody event: EventDTO): Event = service.create(event)
+    fun saveEvent(@RequestBody event: EventDTO) {
+        service.create(event)
+    }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteEvent(@PathVariable id: Long) = service.remove(id)
+    fun deleteEvent(@PathVariable id: Long){
+        service.remove(id)
+    }
 
     @PutMapping("/{id}")
     fun updateEvent(
         @PathVariable id: Long, @RequestBody event: EventDTO
-    ) = service.update(id, event)
+    ) {
+        service.update(id, event)
+    }
 
 
 //        listOf(
