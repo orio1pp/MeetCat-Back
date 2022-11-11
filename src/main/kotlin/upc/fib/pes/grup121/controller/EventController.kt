@@ -1,0 +1,40 @@
+package upc.fib.pes.grup121.controller
+
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.*
+import upc.fib.pes.grup121.model.Event
+import upc.fib.pes.grup121.model.EventDTO
+import upc.fib.pes.grup121.service.EventService
+
+@RequestMapping("/events")
+@RestController
+class EventController (val service: EventService){
+
+    @GetMapping
+    fun getEvents(): List<Event> {
+        return service.getAll()
+    }
+
+    @GetMapping("/{id}")
+    fun getEvent(@PathVariable id: Long) = service.getById(id)
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    fun saveEvent(@RequestBody event: EventDTO): Event = service.create(event)
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteEvent(@PathVariable id: Long) = service.remove(id)
+
+    @PutMapping("/{id}")
+    fun updateEvent(
+        @PathVariable id: Long, @RequestBody event: EventDTO
+    ) = service.update(id, event)
+
+
+//        listOf(
+//        Event("1", "Correbars","description"),
+//        Event("2", "Concert Rosalia", "description"),
+//        Event("3", "Calçotada popular","description"),
+//    )
+}
