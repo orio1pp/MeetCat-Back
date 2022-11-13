@@ -10,7 +10,7 @@ class Lloc (
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO) var id: Long?,
     var name: String?,
-    var coordenades: String?, // guardar cordenades com string
+    var location: String?, // guardar cordenades com string
     var address: String?
     )
 {}

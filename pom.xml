@@ -13,7 +13,7 @@
 	<artifactId>grup12-1</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>grup12-1</name>
-	<description>Api esdeveniments</description>
+	<description>Api events</description>
 	<properties>
 		<java.version>11</java.version>
 		<kotlin.version>1.6.21</kotlin.version>
