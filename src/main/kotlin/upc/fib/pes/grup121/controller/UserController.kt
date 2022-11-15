@@ -23,8 +23,6 @@ class UserController(val service : UserService) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun saveUser(@RequestBody user: UserDTO) {
-        println(user)
-
         service.create(user)
     }
 
@@ -36,8 +34,8 @@ class UserController(val service : UserService) {
 
     @PutMapping("/{id}")
     fun updateUser(
-        @PathVariable id: Long, @RequestBody user: UserDTO, password: String
+        @PathVariable id: Long, @RequestBody user: UserDTO
     ) {
-        service.update(id, user, password)
+        service.update(id, user)
     }
 }

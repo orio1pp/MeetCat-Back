@@ -30,14 +30,16 @@ class UserService(val repository: UserRepository) {
         else throw UserNotFoundException("User with id $id not found")
     }
 
-    fun update(id : Long, user : UserDTO, password: String) : User {
+    fun update(id : Long, user : UserDTO) : User {
         return if (repository.existsById(id)) {
             user.lastUpdate = LocalDateTime.now()
 
             val passwordEncryption = PasswordEncryption()
-            val salt = passwordEncryption.generateSalt() + password
-            val hash = passwordEncryption.hashString(salt)
-            if (hash == repository.findById(id).get().hash) {
+            val saltpass = repository.findById(id).get().salt + user.password
+            val hash = passwordEncryption.hashString(saltpass)
+            println(hash)
+            println(repository.findById(id).get().hash)
+            if (hash.equals(repository.findById(id).get().hash)) {
                 repository.save(User.fromDto(user, repository.findById(id).get()))
             }
             else throw IncorrectPasswordException("Incorrect password")
