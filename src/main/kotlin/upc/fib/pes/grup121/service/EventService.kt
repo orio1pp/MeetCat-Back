@@ -13,7 +13,7 @@ import java.time.LocalDateTime
 @Service
 class EventService(val repository: EventRepository) {
 
-    fun getAll(): List<Event> = repository.findAll()
+    fun getAll(): List<Event> = repository.findAll() as List<Event>
 
     fun getById(id: Long):Event{
         return if (repository.existsById(id)) repository.findById(id).get()

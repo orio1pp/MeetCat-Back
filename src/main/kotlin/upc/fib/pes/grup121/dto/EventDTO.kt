@@ -14,7 +14,8 @@ data class EventDTO(
     var location: String?,
     var address: String?,
     var lastUpdate: LocalDateTime? = null,
-    var createdDate: LocalDateTime? = null
+    var createdDate: LocalDateTime? = null,
+    var agendaEventCode: Long?
 ){
 
 }

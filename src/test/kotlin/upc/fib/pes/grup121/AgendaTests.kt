@@ -20,7 +20,9 @@ class AgendaTests (@Autowired val agendaService: AgendaEventService) {
 
     @Test
     fun test() {
-        agendaService.getAllAgendaEvents()
+    //    var agenda = agendaService.getAllAgendaEvents()
+   //     assertNotNull(agenda)
+      //  agendaService.updateData()
     }
 
 }
