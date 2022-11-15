@@ -6,8 +6,7 @@ data class UserDTO(
     var id: Long?,
     var username: String,
     var email: String,
-    var hash: String?,
-    var salt: String?,
+    var password: String,
     var about: String?,
     var lastUpdate: LocalDateTime? = null,
     var createdDate: LocalDateTime? = null

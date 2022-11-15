@@ -22,8 +22,10 @@ class UserController(val service : UserService) {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun saveUser(@RequestBody user: UserDTO, password: String) {
-        service.create(user, password)
+    fun saveUser(@RequestBody user: UserDTO) {
+        println(user)
+
+        service.create(user)
     }
 
     @DeleteMapping("/{id}")

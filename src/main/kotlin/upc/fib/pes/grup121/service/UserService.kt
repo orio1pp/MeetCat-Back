@@ -19,14 +19,9 @@ class UserService(val repository: UserRepository) {
         else throw UserNotFoundException("User with id $id not found")
     }
 
-    fun create(user: UserDTO, password: String) : User {
+    fun create(user: UserDTO) : User {
         user.createdDate = LocalDateTime.now()
         user.lastUpdate = user.createdDate
-
-        val passwordEncryption = PasswordEncryption()
-        user.salt = passwordEncryption.generateSalt() + password
-        user.hash = passwordEncryption.hashString(user.salt!!)
-
         return repository.save(User.fromDto(user))
     }
 
