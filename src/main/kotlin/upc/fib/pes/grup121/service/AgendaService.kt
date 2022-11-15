@@ -47,12 +47,12 @@ class AgendaEventService(val repository: EventRepository, val eventService: Even
         var restTemplate = RestTemplate()
         var headers = org.springframework.http.HttpHeaders()
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON))
+        headers.add("X-App-Token", "VDBxznSGxvsPzf6jAg2ZV8Ph2")
         val entity = HttpEntity("body", headers)
         val typeRef: ParameterizedTypeReference<List<AgendaEventDTO?>?> =
             object : ParameterizedTypeReference<List<AgendaEventDTO?>?>() {}
         val result = restTemplate.exchange(uri, HttpMethod.GET, entity, typeRef)
         return result.body as List<AgendaEventDTO>
-//        println("Result events agenda: " + eventList.size)
     }
 
 }
