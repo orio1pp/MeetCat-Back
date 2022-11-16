@@ -6,12 +6,12 @@ import javax.persistence.*
 
 @Entity
 @DynamicUpdate
-@Table(name = "evens")
+@Table(name = "events")
 data class Event(
     @Id  @GeneratedValue(strategy = GenerationType.AUTO) var id: Long?,
     var title: String,
     var subtitle: String?,
-    var description: String?,
+    @Column(columnDefinition="TEXT") var description: String?,
     var initDate: LocalDateTime,
     var endDate: LocalDateTime?,
     var link: String?,
@@ -19,10 +19,11 @@ data class Event(
     var location: String?,
     var address: String?,
     var lastUpdate: LocalDateTime? = null,
-    var createdDate: LocalDateTime? = null
+    var createdDate: LocalDateTime? = null,
+    var agendaEventCode: Long?
 ){
     fun toDto(): EventDTO = EventDTO(
-        id = this.id!!,
+        id = this.id,
         title = this.title,
         description = this.description,
         lastUpdate = this.lastUpdate,
@@ -33,7 +34,8 @@ data class Event(
         link = this.link,
         placeName = this.placeName,
         location = this.location,
-        address = this.address
+        address = this.address,
+        agendaEventCode = this.agendaEventCode
     )
 
 
@@ -51,7 +53,9 @@ data class Event(
             link = dto.link,
             placeName = dto.placeName,
             location = dto.location,
-            address = dto.address
+            address = dto.address,
+            agendaEventCode = dto.agendaEventCode
+
   )
 
         fun fromDto(dto: EventDTO, default: Event) = Event(
@@ -66,7 +70,8 @@ data class Event(
             link = dto.link ?: default.link,
             placeName = dto.placeName ?: default.placeName,
             location = dto.location ?: default.location,
-            address = dto.address ?: default.address
+            address = dto.address ?: default.address,
+            agendaEventCode = dto.agendaEventCode ?: default.agendaEventCode,
         )
 
     }
