@@ -10,8 +10,6 @@ import upc.fib.pes.grup121.service.EventService
 @RequestMapping("/agenda")
 @RestController
 class AgendaEventController (val service: AgendaEventService){
-
-
     @PutMapping("/update")
     fun updateData() {
         service.updateData()
