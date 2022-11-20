@@ -37,4 +37,14 @@ class EventService(val repository: EventRepository) {
             repository.save(Event.fromDto(event, repository.findById(id).get()))
         } else throw EventNotFoundException("Not found event with id $id")
     }
+
+    fun saveAll(events:  List<Event> ): List<Event> {
+        events.forEach {
+            it.lastUpdate = LocalDateTime.now()
+            if(it.id == null){
+                it.createdDate = it.lastUpdate
+            }
+        }
+        return repository.saveAll(events).toList()
+    }
 }

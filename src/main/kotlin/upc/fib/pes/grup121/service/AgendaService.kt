@@ -8,6 +8,7 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import upc.fib.pes.grup121.dto.AgendaEventDTO
+import upc.fib.pes.grup121.model.Event
 import upc.fib.pes.grup121.repository.EventRepository
 import upc.fib.pes.grup121.service.EventService
 import java.util.*
@@ -22,24 +23,56 @@ class AgendaEventService(val repository: EventRepository, val eventService: Even
     }
 
     private fun mergeWithDB(agendaEventsList: List<AgendaEventDTO>) {
+        //get events from DB
+        var dbEvents: MutableList<Event> = repository.findAll().toMutableList()
+        //save codes in DB
+        var missingCodes: MutableList<Long> = getAgendaCodes(dbEvents)
+
         agendaEventsList.forEach { event: AgendaEventDTO ->
             println("Merging")
             if(repository.existsByAgendaEventCode(event.codi)) {
-                val dbEvent = repository.findByAgendaEventCode(event.codi!!)
+                val dbEvent = dbEvents.find { it.agendaEventCode!! == event.codi!! }
                 var agendaEvent = event.toEvent()
                 if (dbEvent != null && dbEvent.agendaEventCode == event.codi) {
                     agendaEvent.id = dbEvent.id
                     agendaEvent.lastUpdate = dbEvent.lastUpdate
                     agendaEvent.createdDate = dbEvent.createdDate
-                    eventService.update(dbEvent.id!!, agendaEvent.toDto())
+                    //we remove the found codes on missingCodes
+                    missingCodes.remove(dbEvent.agendaEventCode)
+                    dbEvents.remove(dbEvent)
+                    dbEvents.add(agendaEvent)
                 }
             }
             else {
                 var newEvent = event.toEvent()
-                var newewewEvent = newEvent.toDto()
-                eventService.create(newewewEvent)
+                dbEvents.add(newEvent)
             }
         }
+        //we delete the evens with codes missing in last agenda events
+        dbEvents = deleteByAgendaCodes(dbEvents, missingCodes)
+        eventService.saveAll(dbEvents)
+    }
+
+    private fun getAgendaCodes(events: List<Event>): MutableList<Long> {
+        val agendaCodes: MutableList<Long> = mutableListOf()
+        events.forEach {
+            if(it.agendaEventCode!=null){
+                agendaCodes.add(it.agendaEventCode!!)
+            }
+        }
+        return agendaCodes
+    }
+
+    private fun deleteByAgendaCodes(events: MutableList<Event>, missingCodes: MutableList<Long>): MutableList<Event>{
+        missingCodes.forEach {
+            var code=it
+            val event = events.find{
+                it.agendaEventCode == code
+            }
+            repository.deleteById(event!!.id!!)
+            events.remove(event)
+        }
+        return events
     }
 
     fun getAllAgendaEvents(): List<AgendaEventDTO> {
