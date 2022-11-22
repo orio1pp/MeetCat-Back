@@ -13,21 +13,21 @@ data class Role(
     var name: String? = null
 ) {
     fun toDto(): RoleDTO = RoleDTO(
-        id = this.id!!,
+        id = this.id,
         name = this.name
     )
 
     companion object {
         fun fromDto(dto: RoleDTO) : Role {
             return Role(
-                id = dto.id!!,
+                id = dto.id,
                 name = dto.name
             )
         }
 
         fun fromDto(dto: RoleDTO, default: Role) : Role {
             return Role(
-                id = default.id!!,
+                id = default.id,
                 name = dto.name ?: default.name
             )
         }

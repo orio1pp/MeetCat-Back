@@ -8,11 +8,10 @@ import javax.persistence.*
 
 @Entity
 @DynamicUpdate
-@Table(name = "users")
+@Table(name = "user")
 data class User(
     @Id @GeneratedValue(strategy = GenerationType.AUTO) var id: Long?,
-    var username: String,
-    @Column(unique = true) var email: String,
+    @Column(unique = true) var username: String,
     var password: String,
     @ManyToMany(fetch = FetchType.EAGER) var roles: MutableCollection<Role> = mutableListOf<Role>(),
     var about: String?,
@@ -20,9 +19,8 @@ data class User(
     var lastUpdate: LocalDateTime? = null
 ) {
     fun toDto(): UserDTO = UserDTO(
-        id = this.id!!,
+        id = this.id,
         username = this.username,
-        email = this.email,
         password = this.password,
         roles = this.roles,
         about = this.about,
@@ -33,9 +31,8 @@ data class User(
     companion object {
         fun fromDto(dto: UserDTO) : User {
             return User(
-                id = dto.id!!,
+                id = dto.id,
                 username = dto.username,
-                email = dto.email,
                 password = dto.password,
                 roles = dto.roles,
                 about = dto.about,
@@ -46,9 +43,8 @@ data class User(
 
         fun fromDto(dto: UserDTO, default: User) : User {
             return User(
-                id = default.id!!,
+                id = default.id,
                 username = dto.username ?: default.username,
-                email = dto.email ?: default.email,
                 password = dto.password ?: default.password,
                 roles = dto.roles ?: default.roles,
                 about = dto.about ?: default.about,
