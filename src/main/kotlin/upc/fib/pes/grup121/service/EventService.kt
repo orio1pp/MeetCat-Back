@@ -1,9 +1,9 @@
 package upc.fib.pes.grup121.service
 
-import org.springframework.data.crossstore.ChangeSetPersister
-import org.springframework.http.HttpStatus
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
-import org.springframework.web.server.ResponseStatusException
+import upc.fib.pes.grup121.dto.EventsDTO
 import upc.fib.pes.grup121.exception.EventNotFoundException
 import upc.fib.pes.grup121.model.Event
 import upc.fib.pes.grup121.model.EventDTO
@@ -13,7 +13,10 @@ import java.time.LocalDateTime
 @Service
 class EventService(val repository: EventRepository) {
 
-    fun getAll(): List<Event> = repository.findAll() as List<Event>
+    fun getPaginated(page: Int, size: Int?): EventsDTO {
+        val events = repository.findAll(PageRequest.of(page, size ?: repository.count().toInt()))
+        return EventsDTO(events.content, events.number, events.size)
+    }
 
     fun getById(id: Long):Event{
         return if (repository.existsById(id)) repository.findById(id).get()
