@@ -7,7 +7,7 @@ import org.springframework.data.repository.Repository
 import upc.fib.pes.grup121.model.User
 
 interface UserRepository : CrudRepository<User, Long> {
-    @Query("select * FROM User u where u.username = :username", nativeQuery = true)
+    @Query("select * FROM user u where u.username = :username", nativeQuery = true)
     fun findByUsername(username: String): User
 
     fun existsByUsername(username: String): Boolean
