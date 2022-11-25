@@ -13,7 +13,7 @@
 	<artifactId>grup12-1</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>grup12-1</name>
-	<description>Api esdeveniments</description>
+	<description>Api events</description>
 	<properties>
 		<java.version>11</java.version>
 		<kotlin.version>1.6.21</kotlin.version>
@@ -59,6 +59,31 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jul-to-slf4j</artifactId>
+			<version>1.7.36</version>
+		</dependency>
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>3.18.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -102,6 +127,7 @@
 				</dependencies>
 			</plugin>
 		</plugins>
+		<finalName>meetcat-back-docker</finalName>
 	</build>
 
 </project>
