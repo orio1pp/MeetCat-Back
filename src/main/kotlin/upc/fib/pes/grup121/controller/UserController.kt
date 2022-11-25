@@ -42,6 +42,11 @@ class UserController(val service: UserService) {
         return ResponseEntity.ok().body(service.getById(id))
     }
 
+    @GetMapping("/name")
+    fun getUser(username: String): ResponseEntity<User> {
+        return ResponseEntity.ok().body(service.getByUsername(username))
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun saveUser(@RequestBody user: UserDTO): ResponseEntity<User> {
