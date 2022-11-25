@@ -1,5 +1,7 @@
 package upc.fib.pes.grup121.util
 
+import org.springframework.context.annotation.Bean
+import org.springframework.web.client.RestTemplate
 import java.security.MessageDigest
 import kotlin.random.Random
 
