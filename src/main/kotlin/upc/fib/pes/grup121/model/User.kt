@@ -2,7 +2,6 @@ package upc.fib.pes.grup121.model
 
 import org.hibernate.annotations.DynamicUpdate
 import upc.fib.pes.grup121.dto.UserDTO
-import upc.fib.pes.grup121.util.PasswordEncryption
 import java.time.LocalDateTime
 import javax.persistence.*
 
