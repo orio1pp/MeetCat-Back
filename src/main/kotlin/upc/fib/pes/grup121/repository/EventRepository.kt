@@ -17,8 +17,11 @@ interface EventRepository : CrudRepository<Event, Long>, PagingAndSortingReposit
 
     @Query(
         nativeQuery = true,
-        value="SELECT * FROM events e WHERE ( 6371 * acos( cos( radians(?1) ) * cos( radians( e.latitud ) )" +
-                " * cos( radians( e.longitud ) - radians(?2) ) + sin( radians(?1) ) * sin( radians( e.latitud ) ) ) )" +
-                " <= ?3 LIMIT ?4 , ?5")
+        value="SELECT *, ( 6371 * acos( cos( radians(?1) ) * cos( radians( e.latitud ) )" + //6371 constant to get km
+                " * cos( radians( e.longitud ) - radians(?2) ) + sin( radians(?1) )" +
+                " * sin( radians( e.latitud ) ) ) ) as distance" +
+                " FROM events e WHERE ( 6371 * acos( cos( radians(?1) ) * cos( radians( e.latitud ) )" +
+                " * cos( radians( e.longitud ) - radians(?2) ) + sin( radians(?1) )" +
+                " * sin( radians( e.latitud ) ) ) ) <= ?3 ORDER BY distance LIMIT ?4 , ?5")
     fun findByDistance(latitud : Double, longitud : Double, distance : Double, limit1:Int, limit2:Int): List<Event>
 }
