@@ -23,6 +23,11 @@ class EventService(val repository: EventRepository) {
         else throw EventNotFoundException("Not found event with id $id")
     }
 
+    fun getByDistance(latitud: Double, longitud: Double, distance: Double, page: Int, size: Int?): EventsDTO{
+        var response = repository.findByDistance(latitud, longitud, distance, page, if(size ==null) 1000 else size!!)
+        return EventsDTO(response, page, response.size)
+    }
+
     fun create(event: EventDTO): Event {
         event.createdDate = LocalDateTime.now()
         event.lastUpdate = event.createdDate
@@ -40,4 +45,5 @@ class EventService(val repository: EventRepository) {
             repository.save(Event.fromDto(event, repository.findById(id).get()))
         } else throw EventNotFoundException("Not found event with id $id")
     }
+
 }

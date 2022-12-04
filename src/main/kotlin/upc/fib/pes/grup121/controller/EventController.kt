@@ -3,6 +3,7 @@ package upc.fib.pes.grup121.controller
 import org.springframework.data.repository.query.Param
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
+import upc.fib.pes.grup121.dto.EventsByDistanceRequestDTO
 import upc.fib.pes.grup121.dto.EventsDTO
 import upc.fib.pes.grup121.model.Event
 import upc.fib.pes.grup121.model.EventDTO
@@ -17,6 +18,15 @@ class EventController (val service: EventService){
             @RequestParam("size") size: Int?
     ): EventsDTO {
         return service.getPaginated(page, size)
+    }
+    @GetMapping("/nearests")
+    fun getEventsByDistance(
+            @RequestParam("page", defaultValue = "0") page: Int,
+            @RequestParam("size") size: Int?,
+            @RequestBody dto: EventsByDistanceRequestDTO
+    ): EventsDTO {
+        //distance is a double in km
+        return service.getByDistance(dto.latitud.toDouble(), dto.longitud.toDouble(), dto.distance.toDouble(), page, size)
     }
 
     @GetMapping("/{id}")
