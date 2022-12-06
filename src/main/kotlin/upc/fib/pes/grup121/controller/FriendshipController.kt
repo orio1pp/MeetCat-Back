@@ -20,7 +20,11 @@ class FriendshipController(
     }
 
     @PostMapping("friendship")
-    fun insertFriendship(@RequestBody friendship: FriendshipDTO){
-        friendshipService.insertFriendship(friendship);
+    fun insertFriendship(@RequestParam username:String): ResponseEntity<FriendshipDTO>{
+        username.let{
+            return ResponseEntity.ok(friendshipService.insertFriendship(it))
+        };
+        return ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
     }
 }

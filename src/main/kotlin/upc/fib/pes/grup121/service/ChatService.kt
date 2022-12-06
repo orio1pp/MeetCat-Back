@@ -10,14 +10,14 @@ import upc.fib.pes.grup121.dto.ChatDTO
 class ChatService(
     private final var restTemplate: RestTemplate = RestTemplate()
 ) {
-    var urlChats:String = "http://localhost:8081/chat"
+    var urlChats:String = "http://localhost:7070/chat"
 
     fun getChatByFriendship(friendshipId: Long): ChatDTO? {
         return restTemplate.getForObject<ChatDTO>(urlChats+"?friendshipId="+friendshipId);
     }
 
-    fun getAllChats(userId: Long): List<ChatDTO>?{
-        return restTemplate.getForObject<List<ChatDTO>>(urlChats+"?userId="+userId);
+    fun getAllChats(userId: String): List<String>?{
+        return restTemplate.getForObject<List<String>>(urlChats+"s?userId="+userId);
     }
 
     fun insertChat(chat: ChatDTO){
