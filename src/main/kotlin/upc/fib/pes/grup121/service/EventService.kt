@@ -15,7 +15,7 @@ class EventService(val repository: EventRepository) {
 
     fun getPaginated(page: Int, size: Int?): EventsDTO {
         val events = repository.findAll(PageRequest.of(page, size ?: repository.count().toInt()))
-        return EventsDTO(events.content, events.number, events.size)
+        return EventsDTO(events.content.map{it.toDto()}, events.number, events.size)
     }
 
     fun getById(id: Long):Event{
@@ -25,7 +25,7 @@ class EventService(val repository: EventRepository) {
 
     fun getByDistance(latitud: Double, longitud: Double, distance: Double, page: Int, size: Int?): EventsDTO{
         var response = repository.findByDistance(latitud, longitud, distance, page, if(size ==null) 1000 else size!!)
-        return EventsDTO(response, page, response.size)
+        return EventsDTO(response.map { it.toDto() }, page, response.size)
     }
 
     fun create(event: EventDTO): Event {
