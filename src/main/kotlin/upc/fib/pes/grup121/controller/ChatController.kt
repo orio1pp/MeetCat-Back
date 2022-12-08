@@ -2,6 +2,7 @@ package upc.fib.pes.grup121.controller
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import upc.fib.pes.grup121.dto.ChatDTO
 import upc.fib.pes.grup121.service.ChatService
@@ -33,5 +34,11 @@ class ChatController(
         chat.let{
             chatService.insertChat(it);
         }
+    }
+
+    @DeleteMapping("chat")
+    fun deleteChat(@RequestBody chatId: Long){
+        val nameUser: String = SecurityContextHolder.getContext().authentication.name
+        chatService.deleteChat(chatId, nameUser)
     }
 }

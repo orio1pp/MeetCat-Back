@@ -33,10 +33,6 @@ class SecurityConfig(
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         http.authorizeRequests().antMatchers("/login", "/users/refresh/token", "/**").permitAll()
-        //http.authorizeRequests().antMatchers("/**").hasAnyAuthority("ADMIN")
-        /*http.authorizeRequests().antMatchers("/refresh/token").permitAll()
-        http.authorizeRequests().antMatchers("/user", "/user/role", "/users").hasAnyAuthority("ADMIN", "USER")
-        http.authorizeRequests().antMatchers("/role").hasAnyAuthority("ADMIN")*/
         http.authorizeRequests().anyRequest().authenticated()
         http.addFilter(CustomAuthenticationFilter(authenticationManagerBean()))
         http.addFilterBefore(CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter().javaClass)
