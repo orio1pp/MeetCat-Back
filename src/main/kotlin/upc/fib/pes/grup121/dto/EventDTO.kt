@@ -1,5 +1,6 @@
 package upc.fib.pes.grup121.model
 
+import upc.fib.pes.grup121.dto.UserDTO
 import java.time.LocalDateTime
 
 data class EventDTO(
@@ -15,7 +16,7 @@ data class EventDTO(
     var address: String?,
     var lastUpdate: LocalDateTime? = null,
     var createdDate: LocalDateTime? = null,
-    var agendaEventCode: Long?
+    var agendaEventCode: Long?,
 ){
 
 }

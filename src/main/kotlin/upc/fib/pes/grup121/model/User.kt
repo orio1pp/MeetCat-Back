@@ -1,5 +1,6 @@
 package upc.fib.pes.grup121.model
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.hibernate.annotations.DynamicUpdate
 import upc.fib.pes.grup121.dto.UserDTO
 import java.time.LocalDateTime
@@ -15,7 +16,13 @@ data class User(
     @ManyToMany(fetch = FetchType.EAGER) var roles: MutableCollection<Role> = mutableListOf<Role>(),
     var about: String?,
     var createdDate: LocalDateTime? = null,
-    var lastUpdate: LocalDateTime? = null
+    var lastUpdate: LocalDateTime? = null,
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "Attendance")
+    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "event_id")
+    @JsonIgnoreProperties("attendees")
+    val attendingEvents: MutableList<Event>,
 ) {
     fun toDto(): UserDTO = UserDTO(
         id = this.id,
@@ -24,7 +31,7 @@ data class User(
         roles = this.roles,
         about = this.about,
         createdDate = this.createdDate,
-        lastUpdate = this.lastUpdate
+        lastUpdate = this.lastUpdate,
     )
 
     companion object {
@@ -36,7 +43,8 @@ data class User(
                 roles = dto.roles,
                 about = dto.about,
                 createdDate = dto.createdDate,
-                lastUpdate = dto.lastUpdate
+                lastUpdate = dto.lastUpdate,
+                attendingEvents = mutableListOf(),
             )
         }
 
@@ -48,7 +56,8 @@ data class User(
                 roles = dto.roles ?: default.roles,
                 about = dto.about ?: default.about,
                 createdDate = dto.createdDate ?: default.createdDate,
-                lastUpdate = dto.lastUpdate ?: default.lastUpdate
+                lastUpdate = dto.lastUpdate ?: default.lastUpdate,
+                attendingEvents = default.attendingEvents,
             )
         }
     }
