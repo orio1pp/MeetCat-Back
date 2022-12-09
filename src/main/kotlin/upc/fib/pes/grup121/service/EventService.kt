@@ -1,12 +1,11 @@
 package upc.fib.pes.grup121.service
 
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
-import upc.fib.pes.grup121.dto.EventsDTO
+import upc.fib.pes.grup121.dto.Events.EventsDTO
 import upc.fib.pes.grup121.exception.EventNotFoundException
 import upc.fib.pes.grup121.model.Event
-import upc.fib.pes.grup121.model.EventDTO
+import upc.fib.pes.grup121.dto.Events.EventDTO
 import upc.fib.pes.grup121.repository.EventRepository
 import java.time.LocalDateTime
 

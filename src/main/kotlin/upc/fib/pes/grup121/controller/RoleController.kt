@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
-import upc.fib.pes.grup121.dto.RoleDTO
+import upc.fib.pes.grup121.dto.User.RoleDTO
 import upc.fib.pes.grup121.model.Role
 import upc.fib.pes.grup121.service.RoleService
 import java.net.URI
