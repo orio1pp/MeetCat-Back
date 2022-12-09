@@ -9,6 +9,7 @@ import upc.fib.pes.grup121.dto.Chats.GetChatsDTO
 import upc.fib.pes.grup121.service.ChatService
 
 @RestController
+@RequestMapping("chats")
 class ChatController(
     private final var chatService: ChatService
 ) {
@@ -26,7 +27,7 @@ class ChatController(
         val username = SecurityContextHolder.getContext().authentication.name
         var chats: List<GetChatsDTO>? = chatService.getAllChats(username)
         chats.let{
-            return ResponseEntity.ok(it)
+            return ResponseEntity.ok(chats)
         }
         return ResponseEntity(null, HttpStatus.BAD_REQUEST)
     }
