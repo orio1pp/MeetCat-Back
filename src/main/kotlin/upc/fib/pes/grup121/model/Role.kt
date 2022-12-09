@@ -1,7 +1,7 @@
 package upc.fib.pes.grup121.model
 
 import org.hibernate.annotations.DynamicUpdate
-import upc.fib.pes.grup121.dto.RoleDTO
+import upc.fib.pes.grup121.dto.User.RoleDTO
 import javax.persistence.*
 
 @Entity

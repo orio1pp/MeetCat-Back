@@ -1,6 +1,6 @@
-package upc.fib.pes.grup121.dto
+package upc.fib.pes.grup121.dto.Messages
 
-data class MessageDTO(
+data class InsertMessageDTO(
     var messageId: Long?,
     var text: String?,
     var date:String?,

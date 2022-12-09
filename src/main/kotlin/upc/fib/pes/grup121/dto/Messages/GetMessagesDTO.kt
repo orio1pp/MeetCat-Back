@@ -1,6 +1,6 @@
-package upc.fib.pes.grup121.dto
+package upc.fib.pes.grup121.dto.Messages
 
-class MessagesDTO(
+class GetMessagesDTO(
     val chatId: Long,
     var username:String,
     val page: Int,

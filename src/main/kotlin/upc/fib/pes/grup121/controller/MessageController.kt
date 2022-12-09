@@ -5,8 +5,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.messaging.handler.annotation.SendTo
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
-import upc.fib.pes.grup121.dto.MessageDTO
-import upc.fib.pes.grup121.dto.MessagesDTO
+import upc.fib.pes.grup121.dto.Messages.InsertMessageDTO
+import upc.fib.pes.grup121.dto.Messages.GetMessagesDTO
 import upc.fib.pes.grup121.service.MessageService
 
 @RestController
@@ -14,10 +14,10 @@ class MessageController(
     private final var messageService: MessageService
 ) {
     @GetMapping("message")
-    fun getMessagesById(@RequestBody messagesDTO: MessagesDTO): ResponseEntity<List<MessageDTO>> {
+    fun getMessages(@RequestBody getMessagesDTO: GetMessagesDTO): ResponseEntity<List<InsertMessageDTO>> {
         val username: String = SecurityContextHolder.getContext().authentication.name
-        messagesDTO.username =username
-        var messages: List<MessageDTO>? = messageService.getMessagesById(messagesDTO)
+        getMessagesDTO.username =username
+        var messages: List<InsertMessageDTO>? = messageService.getMessagesById(getMessagesDTO)
         messages.let{
             return ResponseEntity.ok(it);
         }
@@ -26,7 +26,7 @@ class MessageController(
 
     @PostMapping("message")
     @SendTo("/topic/message")
-    fun insertNewMessage(@RequestBody message: MessageDTO){
+    fun insertNewMessage(@RequestBody message: InsertMessageDTO){
         val username: String = SecurityContextHolder.getContext().authentication.name;
         message.let{
             return messageService.insertNewMessage(message, username);

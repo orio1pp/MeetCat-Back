@@ -4,7 +4,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
-import upc.fib.pes.grup121.dto.ChatDTO
+import upc.fib.pes.grup121.dto.Chats.ChatDTO
+import upc.fib.pes.grup121.dto.Chats.GetChatsDTO
 import upc.fib.pes.grup121.service.ChatService
 
 @RestController
@@ -21,8 +22,9 @@ class ChatController(
     }
 
     @GetMapping("chats")
-    fun getAllChats(@RequestParam userId: Long): ResponseEntity<List<ChatDTO>> {
-        var chats: List<ChatDTO>? = chatService.getAllChats(userId)
+    fun getAllChats(): ResponseEntity<List<GetChatsDTO>> {
+        val username = SecurityContextHolder.getContext().authentication.name
+        var chats: List<GetChatsDTO>? = chatService.getAllChats(username)
         chats.let{
             return ResponseEntity.ok(it)
         }
@@ -35,9 +37,8 @@ class ChatController(
             chatService.insertChat(it);
         }
     }
-
     @DeleteMapping("chat")
-    fun deleteChat(@RequestBody chatId: Long){
+    fun deleteChat(@RequestParam chatId: Long){
         val nameUser: String = SecurityContextHolder.getContext().authentication.name
         chatService.deleteChat(chatId, nameUser)
     }
