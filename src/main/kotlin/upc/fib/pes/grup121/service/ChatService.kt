@@ -19,6 +19,13 @@ class ChatService(
     @Value("\${chats.url}")
     lateinit  var chatsUrl: String;
 
+    fun getChatByusername(username: String):MutableList<GetChatsDTO>?{
+        val response:ResponseEntity<MutableList<GetChatsDTO>> =  restTemplate.exchange(chatsUrl+"chat/" +
+                username,
+            HttpMethod.GET, null, object : ParameterizedTypeReference<MutableList<GetChatsDTO>>(){}
+        )
+        return response.body
+    }
     fun getChatByFriendship(friendshipId: Long): ChatDTO? {
         return restTemplate.getForObject<ChatDTO>(chatsUrl+"chat?friendshipId="+friendshipId);
     }

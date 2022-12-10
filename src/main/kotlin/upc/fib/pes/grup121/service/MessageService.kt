@@ -18,7 +18,6 @@ class MessageService(
     @Value("\${chats.url}")
     lateinit  var chatsUrl: String;
     fun getMessagesById(messagesDTO: GetMessagesDTO): List<InsertMessageDTO>? {
-
         val response: ResponseEntity<List<InsertMessageDTO>> = restTemplate.exchange(chatsUrl + "message"+
                 "?chatId=" + messagesDTO.chatId +
                 "&username=" + messagesDTO.username +
