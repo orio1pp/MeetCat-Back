@@ -1,8 +1,7 @@
 package upc.fib.pes.grup121.service
 
 import org.springframework.stereotype.Service
-import upc.fib.pes.grup121.dto.AttendanceDTO
-import upc.fib.pes.grup121.exception.ErrorMessageModel
+import upc.fib.pes.grup121.dto.Events.AttendanceDTO
 import upc.fib.pes.grup121.exception.UserNotFoundException
 import upc.fib.pes.grup121.repository.UserRepository
 

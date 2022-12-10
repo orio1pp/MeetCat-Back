@@ -2,7 +2,7 @@ package upc.fib.pes.grup121.controller
 
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
-import upc.fib.pes.grup121.dto.AttendanceDTO
+import upc.fib.pes.grup121.dto.Events.AttendanceDTO
 import upc.fib.pes.grup121.service.AttendanceService
 
 @RestController
