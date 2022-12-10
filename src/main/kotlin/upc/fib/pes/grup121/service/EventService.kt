@@ -1,5 +1,6 @@
 package upc.fib.pes.grup121.service
 
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import upc.fib.pes.grup121.dto.EventsDTO
@@ -12,12 +13,14 @@ import java.time.LocalDateTime
 @Service
 class EventService(val repository: EventRepository) {
 
-    fun getPaginated(page: Int, size: Int?): EventsDTO {
-        val events = repository.findAll(PageRequest.of(page, size ?: repository.count().toInt()))
-        val eventsContent = events.content.map {
-            it.toDto()
+    fun getPaginated(page: Int, size: Int?, title: String?): EventsDTO {
+        val events: Page<Event>
+        if (title != null) {
+            events = repository.findByTitleContaining(title, PageRequest.of(page, size ?: repository.count().toInt()))
+        } else {
+            events = repository.findAll(PageRequest.of(page, size ?: repository.count().toInt()))
         }
-        return EventsDTO(eventsContent, events.number, events.size)
+        return EventsDTO(events.content, events.number, events.size)
     }
 
     fun getById(id: Long):Event{

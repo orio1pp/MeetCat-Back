@@ -1,4 +1,4 @@
-package upc.fib.pes.grup121.dto
+package upc.fib.pes.grup121.dto.User
 
 import upc.fib.pes.grup121.model.EventDTO
 import upc.fib.pes.grup121.model.Role

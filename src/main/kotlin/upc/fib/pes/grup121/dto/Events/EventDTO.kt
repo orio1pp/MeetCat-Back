@@ -1,4 +1,4 @@
-package upc.fib.pes.grup121.model
+package upc.fib.pes.grup121.dto.Events
 
 import upc.fib.pes.grup121.dto.UserDTO
 import java.time.LocalDateTime

@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
-import upc.fib.pes.grup121.dto.UserDTO
+import upc.fib.pes.grup121.dto.User.UserDTO
 import upc.fib.pes.grup121.model.Role
 import upc.fib.pes.grup121.model.User
 import upc.fib.pes.grup121.service.UserService
