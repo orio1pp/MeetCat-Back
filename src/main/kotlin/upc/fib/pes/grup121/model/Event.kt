@@ -26,6 +26,7 @@ data class Event(
     @ManyToMany(mappedBy = "attendingEvents")
     @JsonIgnoreProperties("attendingEvents")
     var attendees: MutableList<User>,
+    var reported: Boolean? = false,
 ){
     fun toDto(): EventDTO = EventDTO(
         id = this.id,
@@ -61,6 +62,7 @@ data class Event(
             address = dto.address,
             agendaEventCode = dto.agendaEventCode,
             attendees = mutableListOf(),
+            reported = false
 
   )
 
@@ -79,6 +81,7 @@ data class Event(
             address = dto.address ?: default.address,
             agendaEventCode = dto.agendaEventCode ?: default.agendaEventCode,
             attendees = mutableListOf(),
+            reported = false
         )
 
     }
