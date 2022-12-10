@@ -23,8 +23,8 @@ data class Event(
     var lastUpdate: LocalDateTime? = null,
     var createdDate: LocalDateTime? = null,
     var agendaEventCode: Long?,
-    @ManyToMany(mappedBy = "attendees")
-    @JsonIgnoreProperties("attendees")
+    @ManyToMany(mappedBy = "attendingEvents")
+    @JsonIgnoreProperties("attendingEvents")
     var attendees: MutableList<User>,
 ){
     fun toDto(): EventDTO = EventDTO(

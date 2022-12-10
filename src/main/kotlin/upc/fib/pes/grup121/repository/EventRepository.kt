@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.stereotype.Repository
-import upc.fib.pes.grup121.dto.EventsDTO
 import upc.fib.pes.grup121.model.Event
 
 @Repository

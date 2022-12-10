@@ -18,9 +18,11 @@ data class User(
     var createdDate: LocalDateTime? = null,
     var lastUpdate: LocalDateTime? = null,
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "Attendance")
-    @JoinColumn(name = "user_id")
-    @JoinColumn(name = "event_id")
+    @JoinTable(
+        name = "attendance",
+        joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "event_id", referencedColumnName = "id")]
+    )
     @JsonIgnoreProperties("attendees")
     val attendingEvents: MutableList<Event>,
 ) {
