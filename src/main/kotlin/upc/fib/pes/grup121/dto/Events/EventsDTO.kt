@@ -1,9 +1,7 @@
 package upc.fib.pes.grup121.dto.Events
 
-import upc.fib.pes.grup121.model.Event
-
 data class EventsDTO(
-        val events: List<Event>,
+        val events: List<EventDTO>,
         val page: Int,
         val size: Int
 ){

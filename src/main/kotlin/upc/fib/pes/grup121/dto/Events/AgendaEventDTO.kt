@@ -47,6 +47,7 @@ data class AgendaEventDTO(
         address = this.adre_a,
         agendaEventCode = this.codi,
         lastUpdate = null,
-        createdDate = null
+        createdDate = null,
+        attendees = mutableListOf(),
     )
 }

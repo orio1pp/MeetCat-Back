@@ -1,5 +1,6 @@
 package upc.fib.pes.grup121.model
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.hibernate.annotations.DynamicUpdate
 import upc.fib.pes.grup121.dto.Events.EventDTO
 import java.time.LocalDateTime
@@ -21,7 +22,10 @@ data class Event(
     var address: String?,
     var lastUpdate: LocalDateTime? = null,
     var createdDate: LocalDateTime? = null,
-    var agendaEventCode: Long?
+    var agendaEventCode: Long?,
+    @ManyToMany(mappedBy = "attendingEvents")
+    @JsonIgnoreProperties("attendingEvents")
+    var attendees: MutableList<User>,
 ){
     fun toDto(): EventDTO = EventDTO(
         id = this.id,
@@ -36,7 +40,7 @@ data class Event(
         placeName = this.placeName,
         location = this.location,
         address = this.address,
-        agendaEventCode = this.agendaEventCode
+        agendaEventCode = this.agendaEventCode,
     )
 
 
@@ -55,7 +59,8 @@ data class Event(
             placeName = dto.placeName,
             location = dto.location,
             address = dto.address,
-            agendaEventCode = dto.agendaEventCode
+            agendaEventCode = dto.agendaEventCode,
+            attendees = mutableListOf(),
 
   )
 
@@ -73,6 +78,7 @@ data class Event(
             location = dto.location ?: default.location,
             address = dto.address ?: default.address,
             agendaEventCode = dto.agendaEventCode ?: default.agendaEventCode,
+            attendees = mutableListOf(),
         )
 
     }

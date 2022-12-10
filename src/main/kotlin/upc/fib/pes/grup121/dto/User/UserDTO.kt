@@ -10,5 +10,5 @@ data class UserDTO(
     var roles: MutableCollection<Role> = mutableListOf<Role>(),
     var about: String?,
     var lastUpdate: LocalDateTime? = null,
-    var createdDate: LocalDateTime? = null
+    var createdDate: LocalDateTime? = null,
 )
