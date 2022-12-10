@@ -12,8 +12,13 @@ import java.time.LocalDateTime
 @Service
 class EventService(val repository: EventRepository) {
 
-    fun getPaginated(page: Int, size: Int?): EventsDTO {
-        val events = repository.findAll(PageRequest.of(page, size ?: repository.count().toInt()))
+    fun getPaginated(page: Int, size: Int?, title: String?): EventsDTO {
+        val events: Page<Event>
+        if (title != null) {
+            events = repository.findByTitleContaining(title, PageRequest.of(page, size ?: repository.count().toInt()))
+        } else {
+            events = repository.findAll(PageRequest.of(page, size ?: repository.count().toInt()))
+        }
         return EventsDTO(events.content, events.number, events.size)
     }
 

@@ -13,9 +13,10 @@ class EventController (val service: EventService){
     @GetMapping
     fun getEvents(
             @RequestParam("page", defaultValue = "0") page: Int,
-            @RequestParam("size") size: Int?
+            @RequestParam("size") size: Int?,
+            @RequestParam("title") title: String?,
     ): EventsDTO {
-        return service.getPaginated(page, size)
+        return service.getPaginated(page, size, title)
     }
 
     @GetMapping("/{id}")
