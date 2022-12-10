@@ -20,7 +20,10 @@ data class Event(
     var address: String?,
     var lastUpdate: LocalDateTime? = null,
     var createdDate: LocalDateTime? = null,
-    var agendaEventCode: Long?
+    var agendaEventCode: Long?,
+    @ManyToMany var likedByUserList: MutableCollection<User> = mutableListOf<User>(),
+    @ManyToMany var dislikedByUserList: MutableCollection<User> = mutableListOf<User>(),
+    @ManyToMany var commments: MutableCollection<Comment> = mutableListOf<Comment>(),
 ){
     fun toDto(): EventDTO = EventDTO(
         id = this.id,

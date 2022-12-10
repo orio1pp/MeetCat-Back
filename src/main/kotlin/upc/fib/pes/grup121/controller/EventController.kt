@@ -2,7 +2,9 @@ package upc.fib.pes.grup121.controller
 
 import org.springframework.data.repository.query.Param
 import org.springframework.http.HttpStatus
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
+import upc.fib.pes.grup121.dto.CommentDTO
 import upc.fib.pes.grup121.dto.EventsDTO
 import upc.fib.pes.grup121.model.Event
 import upc.fib.pes.grup121.model.EventDTO
@@ -43,6 +45,24 @@ class EventController (val service: EventService){
         service.update(id, event)
     }
 
+    @PutMapping("/{id}/like")
+    fun likeEvent(@PathVariable id: Long): Event? {
+        val username: String = SecurityContextHolder.getContext().authentication.name
+        return service.likeEvent(id, username)
+    }
+
+    @PutMapping("/{id}/dislike")
+    fun dislikeEvent(@PathVariable id: Long): Event? {
+        val username: String = SecurityContextHolder.getContext().authentication.name
+        return service.dislikeEvent(id, username)
+    }
+
+    @PutMapping("/{id}/comment")
+    fun addComment(@PathVariable id: Long, @RequestBody commentDTO: CommentDTO): Event? {
+        val username: String = SecurityContextHolder.getContext().authentication.name
+        commentDTO.username=username
+        return service.addComment(id, commentDTO)
+    }
 
 //        listOf(
 //        Event("1", "Correbars","description"),
