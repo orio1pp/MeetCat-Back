@@ -36,6 +36,7 @@ class EventService(val repository: EventRepository) {
     fun create(event: EventDTO): Event {
         event.createdDate = LocalDateTime.now()
         event.lastUpdate = event.createdDate
+        event.attendeesCount = 0
         return repository.save(Event.fromDto(event))
     }
 
