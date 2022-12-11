@@ -47,4 +47,5 @@ class ChatController(
             chatService.insertChat(it);
         }
     }
+
 }
