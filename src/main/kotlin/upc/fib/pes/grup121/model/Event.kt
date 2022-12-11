@@ -1,5 +1,6 @@
 package upc.fib.pes.grup121.model
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.hibernate.annotations.DynamicUpdate
 import upc.fib.pes.grup121.dto.Events.EventDTO
 import java.time.LocalDateTime
