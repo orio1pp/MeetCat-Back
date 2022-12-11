@@ -1,13 +1,12 @@
 package upc.fib.pes.grup121.agenda
 
 import org.springframework.core.ParameterizedTypeReference
-import org.springframework.data.jpa.domain.AbstractPersistable_.id
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
-import upc.fib.pes.grup121.dto.AgendaEventDTO
+import upc.fib.pes.grup121.dto.Events.AgendaEventDTO
 import upc.fib.pes.grup121.repository.EventRepository
 import upc.fib.pes.grup121.service.EventService
 import java.util.*
@@ -31,7 +30,10 @@ class AgendaEventService(val repository: EventRepository, val eventService: Even
                     agendaEvent.id = dbEvent.id
                     agendaEvent.lastUpdate = dbEvent.lastUpdate
                     agendaEvent.createdDate = dbEvent.createdDate
-                    eventService.update(dbEvent.id!!, agendaEvent.toDto())
+                    agendaEvent.attendeesCount = dbEvent.attendeesCount
+                    val agendaEventDto = agendaEvent.toDto()
+                    agendaEventDto.attendeesCount = dbEvent.attendeesCount
+                    eventService.update(dbEvent.id!!, agendaEventDto)
                 }
             }
             else {

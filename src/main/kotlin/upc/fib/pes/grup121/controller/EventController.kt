@@ -2,9 +2,9 @@ package upc.fib.pes.grup121.controller
 
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
-import upc.fib.pes.grup121.dto.EventsDTO
+import upc.fib.pes.grup121.dto.Events.EventsDTO
 import upc.fib.pes.grup121.model.Event
-import upc.fib.pes.grup121.model.EventDTO
+import upc.fib.pes.grup121.dto.Events.EventDTO
 import upc.fib.pes.grup121.service.EventService
 
 @RequestMapping("/events")
@@ -13,9 +13,10 @@ class EventController (val service: EventService){
     @GetMapping
     fun getEvents(
             @RequestParam("page", defaultValue = "0") page: Int,
-            @RequestParam("size") size: Int?
+            @RequestParam("size") size: Int?,
+            @RequestParam("title") title: String?,
     ): EventsDTO {
-        return service.getPaginated(page, size)
+        return service.getPaginated(page, size, title)
     }
     @GetMapping("/nearest")
     fun getEventsByDistance(

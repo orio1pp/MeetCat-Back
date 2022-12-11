@@ -1,4 +1,4 @@
-package upc.fib.pes.grup121.dto
+package upc.fib.pes.grup121.dto.Events
 
 import upc.fib.pes.grup121.model.Event
 import java.time.LocalDateTime
@@ -48,6 +48,8 @@ data class AgendaEventDTO(
         address = this.adre_a,
         agendaEventCode = this.codi,
         lastUpdate = null,
-        createdDate = null
+        createdDate = null,
+        attendees = mutableListOf(),
+        attendeesCount = 0,
     )
 }

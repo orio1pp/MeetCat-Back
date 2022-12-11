@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
-import upc.fib.pes.grup121.dto.UserDTO
+import upc.fib.pes.grup121.dto.User.UserDTO
 import upc.fib.pes.grup121.exception.UserNotFoundException
 import upc.fib.pes.grup121.model.Role
 import upc.fib.pes.grup121.model.User
@@ -44,11 +44,11 @@ class UserService(val userRepository: UserRepository) : UserDetailsService {
         else throw UserNotFoundException("User with id $id not found")
     }
 
-    fun update(id : Long, user : UserDTO) : User {
+    fun update(id : Long, user : UserDTO) : UserDTO {
         return if (userRepository.existsById(id)) {
             user.lastUpdate = LocalDateTime.now()
             user.password = passwordEncoder().encode(user.password)
-            userRepository.save(User.fromDto(user, userRepository.findById(id).get()))
+            userRepository.save(User.fromDto(user, userRepository.findById(id).get())).toDto()
         }
         else throw UserNotFoundException("User with id $id not found")
     }

@@ -1,4 +1,4 @@
-package upc.fib.pes.grup121.model
+package upc.fib.pes.grup121.dto.Events
 
 //no s'utilitza, potser no es necesari
 data class LlocDTO (

@@ -1,6 +1,8 @@
 package upc.fib.pes.grup121.model
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.hibernate.annotations.DynamicUpdate
+import upc.fib.pes.grup121.dto.Events.EventDTO
 import org.springframework.data.geo.Point
 import java.time.LocalDateTime
 import javax.persistence.*
@@ -17,12 +19,16 @@ data class Event(
     var endDate: LocalDateTime?,
     var link: String?,
     var placeName: String?,
-    var latitud: Double,
-    var longitud: Double,
+    var latitud: Double?,
+    var longitud: Double?,
     var address: String?,
     var lastUpdate: LocalDateTime? = null,
     var createdDate: LocalDateTime? = null,
-    var agendaEventCode: Long?
+    var agendaEventCode: Long?,
+    @ManyToMany(mappedBy = "attendingEvents")
+    @JsonIgnoreProperties("attendingEvents")
+    var attendees: MutableList<User>,
+    var attendeesCount: Int,
 ){
     fun toDto(): EventDTO = EventDTO(
         id = this.id,
@@ -37,7 +43,8 @@ data class Event(
         placeName = this.placeName,
         location = this.latitud.toString()+','+this.longitud.toString(),
         address = this.address,
-        agendaEventCode = this.agendaEventCode
+        agendaEventCode = this.agendaEventCode,
+        attendeesCount = this.attendeesCount,
     )
 
 
@@ -57,8 +64,9 @@ data class Event(
             latitud = dto.location!!.split(",")[0].toDouble(),
             longitud = dto.location!!.split(",")[1].toDouble(),
             address = dto.address,
-            agendaEventCode = dto.agendaEventCode
-
+            agendaEventCode = dto.agendaEventCode,
+            attendees = mutableListOf(),
+            attendeesCount = dto.attendeesCount,
   )
 
         fun fromDto(dto: EventDTO, default: Event) = Event(
@@ -76,6 +84,8 @@ data class Event(
             longitud =  if(dto.location != null) dto.location!!.split(",")[1].toDouble() else default.longitud,
             address = dto.address ?: default.address,
             agendaEventCode = dto.agendaEventCode ?: default.agendaEventCode,
+            attendees = mutableListOf(),
+            attendeesCount = dto.attendeesCount
         )
 
     }
