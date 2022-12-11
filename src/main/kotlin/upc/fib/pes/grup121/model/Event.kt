@@ -26,6 +26,7 @@ data class Event(
     @ManyToMany(mappedBy = "attendingEvents")
     @JsonIgnoreProperties("attendingEvents")
     var attendees: MutableList<User>,
+    var attendeesCount: Int,
 ){
     fun toDto(): EventDTO = EventDTO(
         id = this.id,
@@ -41,6 +42,7 @@ data class Event(
         location = this.location,
         address = this.address,
         agendaEventCode = this.agendaEventCode,
+        attendeesCount = this.attendeesCount,
     )
 
 
@@ -61,17 +63,17 @@ data class Event(
             address = dto.address,
             agendaEventCode = dto.agendaEventCode,
             attendees = mutableListOf(),
-
+            attendeesCount = dto.attendeesCount,
   )
 
         fun fromDto(dto: EventDTO, default: Event) = Event(
             id = default.id!!,
-            title = dto.title  ?: default.title,
+            title = dto.title,
             description = dto.description ?: default.description,
             lastUpdate = dto.lastUpdate  ?: default.lastUpdate,
             createdDate = dto.createdDate  ?: default.createdDate,
             subtitle = dto.subtitle ?: default.subtitle,
-            initDate = dto.initDate ?: default.initDate,
+            initDate = dto.initDate,
             endDate = dto.endDate ?: default.endDate,
             link = dto.link ?: default.link,
             placeName = dto.placeName ?: default.placeName,
@@ -79,6 +81,7 @@ data class Event(
             address = dto.address ?: default.address,
             agendaEventCode = dto.agendaEventCode ?: default.agendaEventCode,
             attendees = mutableListOf(),
+            attendeesCount = dto.attendeesCount
         )
 
     }

@@ -49,5 +49,6 @@ data class AgendaEventDTO(
         lastUpdate = null,
         createdDate = null,
         attendees = mutableListOf(),
+        attendeesCount = 0,
     )
 }

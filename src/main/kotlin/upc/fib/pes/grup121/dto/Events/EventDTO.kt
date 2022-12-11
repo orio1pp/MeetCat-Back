@@ -16,6 +16,7 @@ data class EventDTO(
     var lastUpdate: LocalDateTime? = null,
     var createdDate: LocalDateTime? = null,
     var agendaEventCode: Long?,
+    var attendeesCount: Int,
 ){
 
 }
