@@ -12,9 +12,9 @@ class FriendshipController(
     private final var friendshipService: FriendshipService
 ) {
     @GetMapping("friendship")
-    fun getFriendshipsbyUsername(@RequestBody getFriendshipsDTO: GetFriendshipsDTO): List<FriendshipDTO>? {
+    fun getFriendshipsbyUsername(@RequestParam page: Int, @RequestParam size: Int): List<FriendshipDTO>? {
         val username: String = SecurityContextHolder.getContext().authentication.name
-        getFriendshipsDTO.username = username;
+        val getFriendshipsDTO = GetFriendshipsDTO(username = username, page = page, size = size);
         var friends: List<FriendshipDTO>? = friendshipService.getFriendshipsbyUsername(getFriendshipsDTO);
         return friends
     }

@@ -1,6 +1,5 @@
 package upc.fib.pes.grup121.model
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.hibernate.annotations.DynamicUpdate
 import upc.fib.pes.grup121.dto.Events.EventDTO
 import java.time.LocalDateTime
@@ -68,12 +67,12 @@ data class Event(
 
         fun fromDto(dto: EventDTO, default: Event) = Event(
             id = default.id!!,
-            title = dto.title,
+            title = dto.title  ?: default.title,
             description = dto.description ?: default.description,
             lastUpdate = dto.lastUpdate  ?: default.lastUpdate,
             createdDate = dto.createdDate  ?: default.createdDate,
             subtitle = dto.subtitle ?: default.subtitle,
-            initDate = dto.initDate,
+            initDate = dto.initDate ?: default.initDate,
             endDate = dto.endDate ?: default.endDate,
             link = dto.link ?: default.link,
             placeName = dto.placeName ?: default.placeName,
