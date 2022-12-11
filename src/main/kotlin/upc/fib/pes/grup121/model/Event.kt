@@ -3,6 +3,7 @@ package upc.fib.pes.grup121.model
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import org.hibernate.annotations.DynamicUpdate
 import upc.fib.pes.grup121.dto.Events.EventDTO
+import org.springframework.data.geo.Point
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -18,7 +19,8 @@ data class Event(
     var endDate: LocalDateTime?,
     var link: String?,
     var placeName: String?,
-    var location: String?,
+    var latitud: Double?,
+    var longitud: Double?,
     var address: String?,
     var lastUpdate: LocalDateTime? = null,
     var createdDate: LocalDateTime? = null,
@@ -39,7 +41,7 @@ data class Event(
         endDate = this.endDate,
         link = this.link,
         placeName = this.placeName,
-        location = this.location,
+        location = this.latitud.toString()+','+this.longitud.toString(),
         address = this.address,
         agendaEventCode = this.agendaEventCode,
         attendeesCount = this.attendeesCount,
@@ -59,7 +61,8 @@ data class Event(
             endDate = dto.endDate,
             link = dto.link,
             placeName = dto.placeName,
-            location = dto.location,
+            latitud = dto.location!!.split(",")[0].toDouble(),
+            longitud = dto.location!!.split(",")[1].toDouble(),
             address = dto.address,
             agendaEventCode = dto.agendaEventCode,
             attendees = mutableListOf(),
@@ -77,7 +80,8 @@ data class Event(
             endDate = dto.endDate ?: default.endDate,
             link = dto.link ?: default.link,
             placeName = dto.placeName ?: default.placeName,
-            location = dto.location ?: default.location,
+            latitud = if(dto.location != null) dto.location!!.split(",")[1].toDouble() else default.latitud,
+            longitud =  if(dto.location != null) dto.location!!.split(",")[1].toDouble() else default.longitud,
             address = dto.address ?: default.address,
             agendaEventCode = dto.agendaEventCode ?: default.agendaEventCode,
             attendees = mutableListOf(),

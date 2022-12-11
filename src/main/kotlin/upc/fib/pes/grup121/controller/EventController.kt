@@ -18,6 +18,17 @@ class EventController (val service: EventService){
     ): EventsDTO {
         return service.getPaginated(page, size, title)
     }
+    @GetMapping("/nearest")
+    fun getEventsByDistance(
+            @RequestParam("page", defaultValue = "0") page: Int,
+            @RequestParam("size") size: Int?,
+            @RequestParam("latitude", defaultValue = "41.386575") latitude: Double,
+            @RequestParam("longitude", defaultValue = "2.170068") longitude: Double,
+            @RequestParam("distance", defaultValue = "0.5") distance: Double
+    ): EventsDTO {
+        //distance is a double in km
+        return service.getByDistance(latitude, longitude, distance, page, size)
+    }
 
     @GetMapping("/{id}")
     fun getEvent(@PathVariable id: Long) :Event{

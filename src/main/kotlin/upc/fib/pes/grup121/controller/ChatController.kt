@@ -10,7 +10,7 @@ import upc.fib.pes.grup121.service.ChatService
 
 @RestController
 class ChatController(
-    private final var chatService: ChatService
+    val chatService: ChatService
 ) {
     @GetMapping("chat")
     fun getChatByFriendship(@RequestParam friendshipId: Long): ResponseEntity<ChatDTO> {
