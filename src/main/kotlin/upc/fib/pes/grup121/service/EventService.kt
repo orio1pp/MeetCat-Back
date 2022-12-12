@@ -70,7 +70,7 @@ class EventService(val repository: EventRepository) {
     fun getReported(page: Int, size: Int?, title: String?): EventsDTO {
         var events: Page<Event>
         if (title != null)
-            events = repository.findByReportedIsTrueAnAndTitleEquals(title, PageRequest.of(page, size ?: repository.count().toInt()))
+            events = repository.findByTitleContainingAndReportedIsTrue(title, PageRequest.of(page, size ?: repository.count().toInt()))
         else
             events = repository.findByReportedIsTrue(PageRequest.of(page, size ?: repository.count().toInt()))
 

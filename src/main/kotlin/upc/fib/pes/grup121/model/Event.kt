@@ -88,7 +88,7 @@ data class Event(
             address = dto.address ?: default.address,
             agendaEventCode = dto.agendaEventCode ?: default.agendaEventCode,
             attendees = mutableListOf(),
-            attendeesCount = dto.attendeesCount
+            attendeesCount = dto.attendeesCount,
             reported = false
         )
 

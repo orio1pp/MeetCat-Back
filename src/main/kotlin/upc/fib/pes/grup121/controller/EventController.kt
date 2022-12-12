@@ -68,7 +68,7 @@ class EventController (val service: EventService){
         service.report(id, false)
     }
 
-    @GetMapping("/reported")
+    @GetMapping("/reported") //NOMES PER ADMINS TODO
     fun getReportedEvents(
         @RequestParam("page", defaultValue = "0") page: Int,
         @RequestParam("size") size: Int?,
