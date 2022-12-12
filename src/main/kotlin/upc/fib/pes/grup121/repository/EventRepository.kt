@@ -17,4 +17,6 @@ interface EventRepository : CrudRepository<Event, Long>, PagingAndSortingReposit
     fun findByTitleContaining(title: String, pageable: Pageable): Page<Event>
 
     fun findByReportedIsTrue(pageable: Pageable): Page<Event>
+
+    fun findByReportedIsTrueAnAndTitleEquals(title: String, pageable: Pageable): Page<Event>
 }

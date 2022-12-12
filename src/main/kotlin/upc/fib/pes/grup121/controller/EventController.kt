@@ -61,8 +61,9 @@ class EventController (val service: EventService){
     fun getReportedEvents(
         @RequestParam("page", defaultValue = "0") page: Int,
         @RequestParam("size") size: Int?,
+        @RequestParam("title") title: String?,
     ): EventsDTO  {
-        return service.getReported(page, size)
+        return service.getReported(page, size, title)
     }
 
 

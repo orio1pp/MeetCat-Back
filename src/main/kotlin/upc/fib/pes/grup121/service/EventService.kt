@@ -61,8 +61,12 @@ class EventService(val repository: EventRepository) {
         } else throw EventNotFoundException("Not found event with id $id")
     }
 
-    fun getReported(page: Int, size: Int?): EventsDTO {
-        val events: Page<Event> = repository.findByReportedIsTrue(PageRequest.of(page, size ?: repository.count().toInt()))
+    fun getReported(page: Int, size: Int?, title: String?): EventsDTO {
+        var events: Page<Event>
+        if (title != null)
+            events = repository.findByReportedIsTrueAnAndTitleEquals(title, PageRequest.of(page, size ?: repository.count().toInt()))
+        else
+            events = repository.findByReportedIsTrue(PageRequest.of(page, size ?: repository.count().toInt()))
 
         val eventsContent = events.content.map {
             it.toDto()
