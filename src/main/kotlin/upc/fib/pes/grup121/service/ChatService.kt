@@ -13,12 +13,19 @@ import upc.fib.pes.grup121.dto.Chats.GetChatsDTO
 
 @Service
 class ChatService(
-    private final var userService: UserService
+    val userService: UserService
 ) {
     private final var restTemplate: RestTemplate = RestTemplate()
     @Value("\${chats.url}")
-    lateinit  var chatsUrl: String;
+    lateinit var chatsUrl: String
 
+    fun getChatByusername(username: String):MutableList<GetChatsDTO>?{
+        val response:ResponseEntity<MutableList<GetChatsDTO>> =  restTemplate.exchange(chatsUrl+"chat/" +
+                username,
+            HttpMethod.GET, null, object : ParameterizedTypeReference<MutableList<GetChatsDTO>>(){}
+        )
+        return response.body
+    }
     fun getChatByFriendship(friendshipId: Long): ChatDTO? {
         return restTemplate.getForObject<ChatDTO>(chatsUrl+"chat?friendshipId="+friendshipId);
     }

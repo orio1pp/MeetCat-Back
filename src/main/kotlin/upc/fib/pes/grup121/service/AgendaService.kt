@@ -30,7 +30,10 @@ class AgendaEventService(val repository: EventRepository, val eventService: Even
                     agendaEvent.id = dbEvent.id
                     agendaEvent.lastUpdate = dbEvent.lastUpdate
                     agendaEvent.createdDate = dbEvent.createdDate
-                    eventService.update(dbEvent.id!!, agendaEvent.toDto())
+                    agendaEvent.attendeesCount = dbEvent.attendeesCount
+                    val agendaEventDto = agendaEvent.toDto()
+                    agendaEventDto.attendeesCount = dbEvent.attendeesCount
+                    eventService.update(dbEvent.id!!, agendaEventDto)
                 }
             }
             else {

@@ -43,11 +43,13 @@ data class AgendaEventDTO(
         endDate = this.data_fi,
         link = this.url,
         placeName = this.comarca_i_municipi,
-        location = this.latitud+','+this.longitud,
+        latitud = if(this.latitud!= null) this.latitud!!.toDouble() else 0.toDouble(),
+        longitud = if(this.longitud!= null) this.longitud!!.toDouble() else 0.toDouble(),
         address = this.adre_a,
         agendaEventCode = this.codi,
         lastUpdate = null,
         createdDate = null,
         attendees = mutableListOf(),
+        attendeesCount = 0,
     )
 }

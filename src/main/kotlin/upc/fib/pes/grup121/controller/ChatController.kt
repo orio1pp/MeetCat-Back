@@ -9,9 +9,8 @@ import upc.fib.pes.grup121.dto.Chats.GetChatsDTO
 import upc.fib.pes.grup121.service.ChatService
 
 @RestController
-@RequestMapping("chats")
 class ChatController(
-    private final var chatService: ChatService
+    val chatService: ChatService
 ) {
     @GetMapping("chat")
     fun getChatByFriendship(@RequestParam friendshipId: Long): ResponseEntity<ChatDTO> {
@@ -24,10 +23,20 @@ class ChatController(
 
     @GetMapping("chats")
     fun getAllChats(): ResponseEntity<List<GetChatsDTO>> {
-        val username = SecurityContextHolder.getContext().authentication.name
-        var chats: List<GetChatsDTO>? = chatService.getAllChats(username)
+        var userId:String = SecurityContextHolder.getContext().authentication.name;
+        var chats: List<GetChatsDTO>? = chatService.getAllChats(userId);
         chats.let{
             return ResponseEntity.ok(chats)
+        }
+        return ResponseEntity(null, HttpStatus.BAD_REQUEST)
+    }
+
+    @GetMapping("chat/username")
+    fun getChatsByUsername(): ResponseEntity<MutableList<GetChatsDTO>>{
+        val username:String = SecurityContextHolder.getContext().authentication.name
+        var chats: MutableList<GetChatsDTO>? = chatService.getChatByusername(username)
+        chats.let{
+            return ResponseEntity.ok(it)
         }
         return ResponseEntity(null, HttpStatus.BAD_REQUEST)
     }
@@ -38,9 +47,5 @@ class ChatController(
             chatService.insertChat(it);
         }
     }
-    @DeleteMapping("chat")
-    fun deleteChat(@RequestParam chatId: Long){
-        val nameUser: String = SecurityContextHolder.getContext().authentication.name
-        chatService.deleteChat(chatId, nameUser)
-    }
+
 }
