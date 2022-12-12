@@ -59,6 +59,9 @@ class EventService(
                         event.likedByUserList.remove(it)
                     } else {
                         event.likedByUserList.add(it)
+                        if (event.dislikedByUserList.contains(it)) {
+                            event.dislikedByUserList.remove(it)
+                        }
                     }
                     repository.save(event)
                     return event
@@ -78,6 +81,9 @@ class EventService(
                         event.dislikedByUserList.remove(it)
                     } else {
                         event.dislikedByUserList.add(it)
+                        if (event.likedByUserList.contains(it)) {
+                            event.likedByUserList.remove(it)
+                        }
                     }
                     repository.save(event)
                     return event
