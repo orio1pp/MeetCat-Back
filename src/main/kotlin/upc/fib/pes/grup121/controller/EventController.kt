@@ -54,6 +54,29 @@ class EventController (val service: EventService){
         service.update(id, event)
     }
 
+    @PutMapping("/{id}/report")
+    fun reportEvent(
+        @PathVariable id: Long
+    ) {
+        service.report(id, true)
+    }
+
+    @PutMapping("/{id}/unreport") //NOMES PER ADMINS TODO
+    fun unreportEvent(
+        @PathVariable id: Long
+    ) {
+        service.report(id, false)
+    }
+
+    @GetMapping("/reported") //NOMES PER ADMINS TODO
+    fun getReportedEvents(
+        @RequestParam("page", defaultValue = "0") page: Int,
+        @RequestParam("size") size: Int?,
+        @RequestParam("title") title: String?,
+    ): EventsDTO  {
+        return service.getReported(page, size, title)
+    }
+
 
 //        listOf(
 //        Event("1", "Correbars","description"),

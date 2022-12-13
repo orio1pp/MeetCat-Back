@@ -26,6 +26,9 @@ interface EventRepository : CrudRepository<Event, Long>, PagingAndSortingReposit
                 " * sin( radians( e.latitud ) ) ) ) <= ?3 ORDER BY distance LIMIT ?4 , ?5")
     fun findByDistance(latitud : Double, longitud : Double, distance : Double, limit1:Int, limit2:Int): List<Event>
 
-    fun findByTitleContaining(title: String, pageable: org.springframework.data.domain.Pageable): Page<Event>
+    fun findByTitleContaining(title: String, pageable: Pageable): Page<Event>
 
+    fun findByReportedIsTrue(pageable: Pageable): Page<Event>
+
+    fun findByTitleContainingAndReportedIsTrue(title: String, pageable: Pageable): Page<Event>
 }

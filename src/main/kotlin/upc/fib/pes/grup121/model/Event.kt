@@ -29,6 +29,7 @@ data class Event(
     @JsonIgnoreProperties("attendingEvents")
     var attendees: MutableList<User>,
     var attendeesCount: Int,
+    var reported: Boolean? = false,
 ){
     fun toDto(): EventDTO = EventDTO(
         id = this.id,
@@ -67,6 +68,8 @@ data class Event(
             agendaEventCode = dto.agendaEventCode,
             attendees = mutableListOf(),
             attendeesCount = dto.attendeesCount,
+            reported = false
+
   )
 
         fun fromDto(dto: EventDTO, default: Event) = Event(
@@ -85,7 +88,8 @@ data class Event(
             address = dto.address ?: default.address,
             agendaEventCode = dto.agendaEventCode ?: default.agendaEventCode,
             attendees = mutableListOf(),
-            attendeesCount = dto.attendeesCount
+            attendeesCount = dto.attendeesCount,
+            reported = false
         )
 
     }

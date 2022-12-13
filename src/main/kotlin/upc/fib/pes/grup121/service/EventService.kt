@@ -2,6 +2,7 @@ package upc.fib.pes.grup121.service
 
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import upc.fib.pes.grup121.dto.Events.EventDTO
 import upc.fib.pes.grup121.dto.Events.EventsDTO
@@ -28,7 +29,7 @@ class EventService(val repository: EventRepository) {
         return EventsDTO(eventsContent, events.number, events.size)
     }
 
-    fun getById(id: Long):Event{
+    fun getById(id: Long): Event {
         return if (repository.existsById(id)) repository.findById(id).get()
         else throw EventNotFoundException("Not found event with id $id")
     }
@@ -55,5 +56,28 @@ class EventService(val repository: EventRepository) {
             event.lastUpdate = LocalDateTime.now()
             repository.save(Event.fromDto(event, repository.findById(id).get()))
         } else throw EventNotFoundException("Not found event with id $id")
+    }
+
+    fun report(id: Long, reported: Boolean): Event {
+        var reportedEvent: Event? = repository.findByIdOrNull(id)
+        return if (reportedEvent != null) {
+            reportedEvent.lastUpdate = LocalDateTime.now()
+            reportedEvent.reported = reported
+            repository.save(reportedEvent)
+        } else throw EventNotFoundException("Not found event with id $id")
+    }
+
+    fun getReported(page: Int, size: Int?, title: String?): EventsDTO {
+        var events: Page<Event>
+        if (title != null)
+            events = repository.findByTitleContainingAndReportedIsTrue(title, PageRequest.of(page, size ?: repository.count().toInt()))
+        else
+            events = repository.findByReportedIsTrue(PageRequest.of(page, size ?: repository.count().toInt()))
+
+        val eventsContent = events.content.map {
+            it.toDto()
+        }
+
+        return EventsDTO(eventsContent, events.number, events.size)
     }
 }
