@@ -56,8 +56,9 @@ class UserController(val service: UserService) {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteUser(@PathVariable id: Long) {
-        service.remove(id)
+    fun deleteUser(@PathVariable id: Long): ResponseEntity<Optional<User>> {
+        val user = service.remove(id)
+        return ResponseEntity.ok().body(user)
     }
 
     @PutMapping("/{id}")
