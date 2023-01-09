@@ -1,7 +1,10 @@
 package upc.fib.pes.grup121.controller
 
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
+import upc.fib.pes.grup121.dto.Attendance.AttendanceDTO
 import upc.fib.pes.grup121.dto.Events.EventsDTO
 import upc.fib.pes.grup121.model.Event
 import upc.fib.pes.grup121.dto.Events.EventDTO
@@ -38,20 +41,23 @@ class EventController (val service: EventService){
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun saveEvent(@RequestBody event: EventDTO) {
-        service.create(event)
+        val username = SecurityContextHolder.getContext().authentication.name
+        service.create(username, event)
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteEvent(@PathVariable id: Long){
-        service.remove(id)
+        val username = SecurityContextHolder.getContext().authentication.name
+        service.remove(username, id)
     }
 
     @PutMapping("/{id}")
     fun updateEvent(
         @PathVariable id: Long, @RequestBody event: EventDTO
     ) {
-        service.update(id, event)
+        val username = SecurityContextHolder.getContext().authentication.name
+        service.update(username, id, event)
     }
 
     @PutMapping("/{id}/report")

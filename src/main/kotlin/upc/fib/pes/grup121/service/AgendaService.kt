@@ -9,11 +9,12 @@ import org.springframework.web.client.RestTemplate
 import upc.fib.pes.grup121.dto.Events.AgendaEventDTO
 import upc.fib.pes.grup121.repository.EventRepository
 import upc.fib.pes.grup121.service.EventService
+import upc.fib.pes.grup121.service.UserService
 import java.util.*
 
 
 @Service
-class AgendaEventService(val repository: EventRepository, val eventService: EventService) {
+class AgendaEventService(val repository: EventRepository, val eventService: EventService, val userService: UserService) {
 
     fun updateData() {
         var agendaEventsList: List<AgendaEventDTO> = getAllAgendaEvents()
@@ -23,23 +24,24 @@ class AgendaEventService(val repository: EventRepository, val eventService: Even
     private fun mergeWithDB(agendaEventsList: List<AgendaEventDTO>) {
         agendaEventsList.forEach { event: AgendaEventDTO ->
             println("Merging")
+            val user = userService.getAgendaUser()
             if(repository.existsByAgendaEventCode(event.codi)) {
                 val dbEvent = repository.findByAgendaEventCode(event.codi!!)
-                var agendaEvent = event.toEvent()
-                if (dbEvent != null && dbEvent.agendaEventCode == event.codi) {
+                var agendaEvent = event.toEvent(user)
+                if (dbEvent.agendaEventCode == event.codi) {
                     agendaEvent.id = dbEvent.id
                     agendaEvent.lastUpdate = dbEvent.lastUpdate
                     agendaEvent.createdDate = dbEvent.createdDate
                     agendaEvent.attendeesCount = dbEvent.attendeesCount
                     val agendaEventDto = agendaEvent.toDto()
                     agendaEventDto.attendeesCount = dbEvent.attendeesCount
-                    eventService.update(dbEvent.id!!, agendaEventDto)
+                    eventService.update(username = "Agenda Cultural", id = dbEvent.id!!, event = agendaEventDto)
                 }
             }
             else {
-                var newEvent = event.toEvent()
-                var newewewEvent = newEvent.toDto()
-                eventService.create(newewewEvent)
+                var newEvent = event.toEvent(user)
+                var newEventDto = newEvent.toDto()
+                eventService.create(user.username, newEventDto)
             }
         }
     }

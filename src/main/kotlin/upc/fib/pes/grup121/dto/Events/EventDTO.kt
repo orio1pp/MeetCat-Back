@@ -6,6 +6,7 @@ data class EventDTO(
     var id: Long?,
     var title: String,
     var subtitle: String?,
+    var username: String?,
     var description: String?,
     var initDate: LocalDateTime,
     var endDate: LocalDateTime?,
