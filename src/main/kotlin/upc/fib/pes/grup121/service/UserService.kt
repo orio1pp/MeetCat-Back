@@ -12,6 +12,7 @@ import upc.fib.pes.grup121.model.Role
 import upc.fib.pes.grup121.model.User
 import upc.fib.pes.grup121.repository.UserRepository
 import java.time.LocalDateTime
+import java.util.*
 
 @Service
 class UserService(val userRepository: UserRepository) : UserDetailsService {
@@ -59,8 +60,12 @@ class UserService(val userRepository: UserRepository) : UserDetailsService {
         return userRepository.save(User.fromDto(user))
     }
 
-    fun remove(id : Long) {
-        if (userRepository.existsById(id)) userRepository.deleteById(id)
+    fun remove(id : Long): Optional<User> {
+        if (userRepository.existsById(id)) {
+            val user = userRepository.findById(id)
+            userRepository.deleteById(id)
+            return user
+        }
         else throw UserNotFoundException("User with id $id not found")
     }
 
