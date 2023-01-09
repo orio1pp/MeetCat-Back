@@ -14,6 +14,9 @@ data class Event(
     @Id  @GeneratedValue(strategy = GenerationType.AUTO) var id: Long?,
     var title: String,
     var subtitle: String?,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "createdByUsername")
+    var user: User,
     @Column(columnDefinition="TEXT") var description: String?,
     var initDate: LocalDateTime,
     var endDate: LocalDateTime?,
@@ -34,6 +37,7 @@ data class Event(
     fun toDto(): EventDTO = EventDTO(
         id = this.id,
         title = this.title,
+        username = this.user.username,
         description = this.description,
         lastUpdate = this.lastUpdate,
         createdDate = this.createdDate,
@@ -51,9 +55,10 @@ data class Event(
 
     companion object {
 
-        fun fromDto(dto: EventDTO) = Event(
+        fun fromDto(dto: EventDTO, user: User) = Event(
             id = dto.id,
             title = dto.title,
+            user = user,
             description = dto.description,
             lastUpdate = dto.lastUpdate,
             createdDate = dto.createdDate,
@@ -75,6 +80,7 @@ data class Event(
         fun fromDto(dto: EventDTO, default: Event) = Event(
             id = default.id!!,
             title = dto.title  ?: default.title,
+            user = default.user,
             description = dto.description ?: default.description,
             lastUpdate = dto.lastUpdate  ?: default.lastUpdate,
             createdDate = dto.createdDate  ?: default.createdDate,

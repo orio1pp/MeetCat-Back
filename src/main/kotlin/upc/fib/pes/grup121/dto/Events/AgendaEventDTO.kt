@@ -1,6 +1,7 @@
 package upc.fib.pes.grup121.dto.Events
 
 import upc.fib.pes.grup121.model.Event
+import upc.fib.pes.grup121.model.User
 import java.time.LocalDateTime
 
 data class AgendaEventDTO(
@@ -34,9 +35,10 @@ data class AgendaEventDTO(
     var imgapp : String?,
     var descripcio_html : String?
 ){
-    fun toEvent(): Event = Event(
+    fun toEvent(user: User): Event = Event(
         id = null,
         title = this.denominaci!!,
+        user = user,
         description = this.descripcio,
         subtitle = this.subt_tol,
         initDate = this.data_inici!!,

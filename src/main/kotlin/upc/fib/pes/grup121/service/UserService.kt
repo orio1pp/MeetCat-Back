@@ -32,6 +32,26 @@ class UserService(val userRepository: UserRepository) : UserDetailsService {
         else throw UserNotFoundException("User with id $username not found")
     }
 
+    fun getAgendaUser(): User {
+        if (userRepository.existsByUsername("Agenda Cultural"))
+            return userRepository.findByUsername("Agenda Cultural")
+
+        val user = User(
+            id = null,
+            username = "Agenda Cultural",
+            password = "",
+            roles = mutableListOf(),
+            about = "",
+            createdDate = LocalDateTime.now(),
+            lastUpdate = LocalDateTime.now(),
+            attendingEvents = mutableListOf(),
+        )
+
+        userRepository.save(user)
+
+        return user
+    }
+
     fun create(user: UserDTO) : User {
         user.createdDate = LocalDateTime.now()
         user.lastUpdate = user.createdDate
