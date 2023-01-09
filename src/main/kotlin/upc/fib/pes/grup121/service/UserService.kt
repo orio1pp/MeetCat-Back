@@ -28,8 +28,8 @@ class UserService(val userRepository: UserRepository) : UserDetailsService {
         else throw UserNotFoundException("User with id $id not found")
     }
 
-    fun getByUsername(username: String): User {
-        return if (userRepository.existsByUsername(username)) userRepository.findByUsername(username)
+    fun getByUsername(username: String): UserDTO {
+        return if (userRepository.existsByUsername(username)) userRepository.findByUsername(username).toDto()
         else throw UserNotFoundException("User with id $username not found")
     }
 

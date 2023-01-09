@@ -8,6 +8,7 @@ import upc.fib.pes.grup121.dto.Events.EventDTO
 import upc.fib.pes.grup121.dto.Events.EventsDTO
 import upc.fib.pes.grup121.exception.EventNotFoundException
 import upc.fib.pes.grup121.model.Event
+import upc.fib.pes.grup121.model.User
 import upc.fib.pes.grup121.repository.EventRepository
 import java.time.LocalDateTime
 
@@ -40,7 +41,7 @@ class EventService(val repository: EventRepository, val userService: UserService
     }
 
     fun create(username: String, event: EventDTO): Event {
-        val user = userService.getByUsername(username)
+        val user = User.fromDto(userService.getByUsername(username))
         event.createdDate = LocalDateTime.now()
         event.lastUpdate = event.createdDate
         event.attendeesCount = 0
