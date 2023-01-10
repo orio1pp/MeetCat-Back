@@ -13,12 +13,18 @@ import upc.fib.pes.grup121.repository.EventRepository
 import java.time.LocalDateTime
 
 @Service
-class EventService(val repository: EventRepository, val userService: UserService) {
-
-    fun getPaginated(page: Int, size: Int?, title: String?): EventsDTO {
+class EventService(
+    val repository: EventRepository,
+    val userService: UserService,
+    val attendanceService: AttendanceService,
+) {
+    fun getPaginated(page: Int, size: Int?, title: String?, username: String?): EventsDTO {
 
         val events: Page<Event> = if (title != null) {
             repository.findByTitleContaining(title, PageRequest.of(page, size ?: repository.count().toInt()))
+        } else if (username != null) {
+            val user = userService.getByUsername(username)
+            repository.findByUser(User.fromDto(user), PageRequest.of(page, size ?: repository.count().toInt()))
         } else {
             repository.findAll(PageRequest.of(page, size ?: repository.count().toInt()))
         }
@@ -49,13 +55,10 @@ class EventService(val repository: EventRepository, val userService: UserService
     }
 
     fun remove(username: String, id: Long) {
-        val user = userService.getByUsername(username)
-        if (repository.existsById(id) && repository.findById(id).get().user.id == userService.getByUsername(username).id){
-            if (repository.findById(id).get().user.id == userService.getByUsername(username).id)
-                repository.deleteById(id)
-            else throw EventNotFoundException("Not found event with id $id")
-        }
-        else throw EventNotFoundException("Not found event with id $id")
+        if (attendanceService.deleteAttendancesOnDeleteEvent(username, id))
+            repository.deleteById(id)
+        else
+            throw EventNotFoundException("Not found event with id $id")
     }
 
     fun update(username: String, id: Long, event: EventDTO): Event {
