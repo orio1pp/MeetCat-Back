@@ -18,8 +18,9 @@ class EventController (val service: EventService){
             @RequestParam("page", defaultValue = "0") page: Int,
             @RequestParam("size") size: Int?,
             @RequestParam("title") title: String?,
+            @RequestParam("username") username: String?,
     ): EventsDTO {
-        return service.getPaginated(page, size, title)
+        return service.getPaginated(page, size, title, username)
     }
     @GetMapping("/nearest")
     fun getEventsByDistance(

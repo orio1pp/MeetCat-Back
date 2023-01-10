@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service
 import upc.fib.pes.grup121.dto.Attendance.AttendanceDTO
 import upc.fib.pes.grup121.exception.EventNotFoundException
 import upc.fib.pes.grup121.exception.UserNotFoundException
+import upc.fib.pes.grup121.model.User
 import upc.fib.pes.grup121.repository.EventRepository
 import upc.fib.pes.grup121.repository.UserRepository
 
@@ -32,6 +33,19 @@ class AttendanceService(
 
     fun delete(username: String, eventId: Long): AttendanceDTO {
         return AttendanceDTO(eventId = updateAttendingEvents(username, eventId, false))
+    }
+
+    fun deleteAttendancesOnDeleteEvent(username: String, eventId: Long): Boolean {
+        if (eventRepository.existsById(eventId)
+            && eventRepository.findById(eventId).get().user.id == userRepository.findByUsername(username).id) {
+            val event = eventRepository.findById(eventId).get()
+            val users = userRepository.findByAttendingEvents(event)
+            users.forEach { user ->
+                delete(user.username, eventId)
+            }
+            return true
+        }
+        return false
     }
 
     private fun updateAttendingEvents(username: String, eventId: Long, isCreate: Boolean): Long {

@@ -8,6 +8,7 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.stereotype.Repository
 import upc.fib.pes.grup121.model.Event
+import upc.fib.pes.grup121.model.User
 
 @Repository
 interface EventRepository : CrudRepository<Event, Long>, PagingAndSortingRepository<Event, Long> {
@@ -27,6 +28,8 @@ interface EventRepository : CrudRepository<Event, Long>, PagingAndSortingReposit
     fun findByDistance(latitud : Double, longitud : Double, distance : Double, limit1:Int, limit2:Int): List<Event>
 
     fun findByTitleContaining(title: String, pageable: Pageable): Page<Event>
+
+    fun findByUser(user: User, pageable: Pageable): Page<Event>
 
     fun findByReportedIsTrue(pageable: Pageable): Page<Event>
 

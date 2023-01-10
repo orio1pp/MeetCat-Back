@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import upc.fib.pes.grup121.dto.User.UserDTO
 import upc.fib.pes.grup121.exception.UserNotFoundException
+import upc.fib.pes.grup121.model.Event
 import upc.fib.pes.grup121.model.Role
 import upc.fib.pes.grup121.model.User
 import upc.fib.pes.grup121.repository.UserRepository
@@ -15,7 +16,9 @@ import java.time.LocalDateTime
 import java.util.*
 
 @Service
-class UserService(val userRepository: UserRepository) : UserDetailsService {
+class UserService(
+        val userRepository: UserRepository,
+) : UserDetailsService {
 
     fun passwordEncoder(): BCryptPasswordEncoder {
         return BCryptPasswordEncoder()
