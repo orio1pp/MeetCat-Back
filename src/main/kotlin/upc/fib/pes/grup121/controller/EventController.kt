@@ -97,14 +97,14 @@ class EventController (val service: EventService){
     }
 
     @GetMapping("/{id}/liked")
-    fun getLiked(@PathVariable id: Long): ResponseEntity<Boolean>{
-        val username: String = SecurityContextHolder.getContext().authentication.name
+    fun getLiked(@PathVariable id: Long, @RequestParam username: String): ResponseEntity<Boolean>{
+        //val username: String = SecurityContextHolder.getContext().authentication.name
         return ResponseEntity.ok().body(service.getLiked(username, id))
     }
 
     @GetMapping("/{id}/disliked")
-    fun getDisliked(@PathVariable id: Long): ResponseEntity<Boolean>{
-        val username: String = SecurityContextHolder.getContext().authentication.name
+    fun getDisliked(@PathVariable id: Long, @RequestParam username: String): ResponseEntity<Boolean>{
+        //val username: String = SecurityContextHolder.getContext().authentication.name
         return ResponseEntity.ok().body(service.getDisliked(username, id))
     }
 

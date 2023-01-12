@@ -20,11 +20,10 @@ class EventService(
     val attendanceService: AttendanceService,
 ) {
     fun getLiked(username: String, eventId: Long): Boolean {
-        var auxusername = "Andrei Popa"
         if (repository.existsById(eventId)) {
             val event = repository.findById(eventId).get()
-            if (userService.existsByUsername(auxusername)) {
-                val user = User.fromDto(userService.getByUsername(auxusername))
+            if (userService.existsByUsername(username)) {
+                val user = User.fromDto(userService.getByUsername(username))
                 if (event.likedByUserList.contains(user))
                     return true
                 return false
@@ -35,11 +34,10 @@ class EventService(
     }
 
     fun getDisliked(username: String, eventId: Long): Boolean {
-        var auxusername = "Andrei Popa"
         if (repository.existsById(eventId)) {
             val event = repository.findById(eventId).get()
-            if (userService.existsByUsername(auxusername)) {
-                val user = User.fromDto(userService.getByUsername(auxusername))
+            if (userService.existsByUsername(username)) {
+                val user = User.fromDto(userService.getByUsername(username))
                 if (event.dislikedByUserList.contains(user))
                     return true
                 return false
