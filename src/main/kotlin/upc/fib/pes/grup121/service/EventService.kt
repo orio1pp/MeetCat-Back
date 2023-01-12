@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service
 import upc.fib.pes.grup121.dto.Events.EventDTO
 import upc.fib.pes.grup121.dto.Events.EventsDTO
 import upc.fib.pes.grup121.exception.EventNotFoundException
+import upc.fib.pes.grup121.exception.UserNotFoundException
 import upc.fib.pes.grup121.model.Event
 import upc.fib.pes.grup121.model.User
 import upc.fib.pes.grup121.repository.EventRepository
@@ -18,6 +19,36 @@ class EventService(
     val userService: UserService,
     val attendanceService: AttendanceService,
 ) {
+    fun getLiked(username: String, eventId: Long): Boolean {
+        var auxusername = "Andrei Popa"
+        if (repository.existsById(eventId)) {
+            val event = repository.findById(eventId).get()
+            if (userService.existsByUsername(auxusername)) {
+                val user = User.fromDto(userService.getByUsername(auxusername))
+                if (event.likedByUserList.contains(user))
+                    return true
+                return false
+            }
+            else throw UserNotFoundException("User with id ${username} not found")
+        }
+        else throw EventNotFoundException("Event with id ${eventId} not found")
+    }
+
+    fun getDisliked(username: String, eventId: Long): Boolean {
+        var auxusername = "Andrei Popa"
+        if (repository.existsById(eventId)) {
+            val event = repository.findById(eventId).get()
+            if (userService.existsByUsername(auxusername)) {
+                val user = User.fromDto(userService.getByUsername(auxusername))
+                if (event.dislikedByUserList.contains(user))
+                    return true
+                return false
+            }
+            else throw UserNotFoundException("User with id ${username} not found")
+        }
+        else throw EventNotFoundException("Event with id ${eventId} not found")
+    }
+
     fun getPaginated(page: Int, size: Int?, title: String?, username: String?): EventsDTO {
 
         val events: Page<Event> = if (title != null) {
@@ -89,5 +120,49 @@ class EventService(
         }
 
         return EventsDTO(eventsContent, events.number, events.size)
+    }
+
+    fun likeEvent(id: Long, username: String): Event? {
+        return if (repository.existsById(id)) {
+            var event = repository.findById(id).get()
+            try {
+                userService.getByUsername(username).let {
+                    if (event.likedByUserList.contains(User.fromDto(it))) {
+                        event.likedByUserList.remove(User.fromDto(it))
+                    } else {
+                        event.likedByUserList.add(User.fromDto(it))
+                    }
+                    if (event.dislikedByUserList.contains(User.fromDto(it))) {
+                        event.dislikedByUserList.remove(User.fromDto(it))
+                    }
+                    repository.save(event)
+                    return event
+                }
+            } catch (e: Exception) {
+                return null;
+            }
+        } else throw EventNotFoundException("Not found event with id $id")
+    }
+
+    fun dislikeEvent(id: Long, username: String): Event? {
+        return if (repository.existsById(id)) {
+            var event = repository.findById(id).get()
+            try {
+                userService.getByUsername(username).let {
+                    if (event.dislikedByUserList.contains(User.fromDto(it))) {
+                        event.dislikedByUserList.remove(User.fromDto(it))
+                    } else {
+                        event.dislikedByUserList.add(User.fromDto(it))
+                    }
+                    if (event.likedByUserList.contains(User.fromDto(it))) {
+                        event.likedByUserList.remove(User.fromDto(it))
+                    }
+                    repository.save(event)
+                    return event
+                }
+            } catch (e: Exception) {
+                return null;
+            }
+        } else throw EventNotFoundException("Not found event with id $id")
     }
 }
