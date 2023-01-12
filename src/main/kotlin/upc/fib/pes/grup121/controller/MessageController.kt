@@ -14,9 +14,9 @@ class MessageController(
     private final var messageService: MessageService
 ) {
     @GetMapping("message")
-    fun getMessages(@RequestBody getMessagesDTO: GetMessagesDTO): ResponseEntity<List<InsertMessageDTO>> {
+    fun getMessages(@RequestParam chatId : Long, @RequestParam page : Int, @RequestParam size : Int): ResponseEntity<List<InsertMessageDTO>> {
         val username: String = SecurityContextHolder.getContext().authentication.name
-        getMessagesDTO.username =username
+        val getMessagesDTO = GetMessagesDTO(chatId = chatId, username = username, page = page, size = size)
         var messages: List<InsertMessageDTO>? = messageService.getMessagesById(getMessagesDTO)
         messages.let{
             return ResponseEntity.ok(it);
