@@ -33,6 +33,8 @@ data class Event(
     var attendees: MutableList<User>,
     var attendeesCount: Int,
     var reported: Boolean? = false,
+    @ManyToMany var likedByUserList: MutableCollection<User> = mutableListOf<User>(),
+    @ManyToMany var dislikedByUserList: MutableCollection<User> = mutableListOf<User>(),
 ){
     fun toDto(): EventDTO = EventDTO(
         id = this.id,
@@ -50,6 +52,8 @@ data class Event(
         address = this.address,
         agendaEventCode = this.agendaEventCode,
         attendeesCount = this.attendeesCount,
+        likedByUserList = this.likedByUserList,
+        dislikedByUserList = this.dislikedByUserList
     )
 
 
@@ -73,6 +77,8 @@ data class Event(
             agendaEventCode = dto.agendaEventCode,
             attendees = mutableListOf(),
             attendeesCount = dto.attendeesCount,
+            likedByUserList = dto.likedByUserList,
+            dislikedByUserList = dto.dislikedByUserList,
             reported = false
 
   )
