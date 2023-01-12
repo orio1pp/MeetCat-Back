@@ -1,5 +1,6 @@
 package upc.fib.pes.grup121.dto.Events
 
+import upc.fib.pes.grup121.model.User
 import java.time.LocalDateTime
 
 data class EventDTO(
@@ -18,6 +19,8 @@ data class EventDTO(
     var createdDate: LocalDateTime? = null,
     var agendaEventCode: Long?,
     var attendeesCount: Int,
+    var likedByUserList: MutableCollection<User> = mutableListOf<User>(),
+    var dislikedByUserList: MutableCollection<User> = mutableListOf<User>(),
 ){
 
 }

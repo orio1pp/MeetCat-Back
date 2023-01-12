@@ -31,6 +31,11 @@ class UserService(
         else throw UserNotFoundException("User with id $id not found")
     }
 
+    fun existsByUsername(username: String): Boolean {
+        if (userRepository.existsByUsername(username)) return true
+        return false
+    }
+
     fun getByUsername(username: String): UserDTO {
         return if (userRepository.existsByUsername(username)) userRepository.findByUsername(username).toDto()
         else throw UserNotFoundException("User with id $username not found")
