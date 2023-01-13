@@ -14,4 +14,8 @@ interface UserRepository : CrudRepository<User, Long> {
     fun existsByUsername(username: String): Boolean
 
     fun findByAttendingEvents(event: Event): MutableList<User>
+
+    fun findByEventsLiked(event: Event): MutableList<User>
+
+    fun findByEventsDisliked(event: Event): MutableList<User>
 }

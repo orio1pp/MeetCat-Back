@@ -12,6 +12,7 @@ import upc.fib.pes.grup121.model.Event
 import upc.fib.pes.grup121.model.Role
 import upc.fib.pes.grup121.model.User
 import upc.fib.pes.grup121.repository.UserRepository
+import java.lang.Exception
 import java.time.LocalDateTime
 import java.util.*
 
@@ -54,6 +55,8 @@ class UserService(
             createdDate = LocalDateTime.now(),
             lastUpdate = LocalDateTime.now(),
             attendingEvents = mutableListOf(),
+            eventsLiked = mutableListOf(),
+            eventsDisliked = mutableListOf(),
         )
 
         userRepository.save(user)
@@ -65,7 +68,10 @@ class UserService(
         user.createdDate = LocalDateTime.now()
         user.lastUpdate = user.createdDate
         user.password = passwordEncoder().encode(user.password)
-        return userRepository.save(User.fromDto(user))
+        return if (!userRepository.existsByUsername(user.username)) {
+            userRepository.save(User.fromDto(user))
+        }
+        else throw Exception("User already exists")
     }
 
     fun remove(id : Long): Optional<User> {

@@ -20,34 +20,9 @@ class EventService(
     val repository: EventRepository,
     val userService: UserService,
     val attendanceService: AttendanceService,
+    val likeService: LikeService,
 ) {
-    fun getLiked(username: String, eventId: Long): Boolean {
-        if (repository.existsById(eventId)) {
-            val event = repository.findById(eventId).get()
-            if (userService.existsByUsername(username)) {
-                val user = User.fromDto(userService.getByUsername(username))
-                if (event.likedByUserList.contains(user))
-                    return true
-                return false
-            }
-            else throw UserNotFoundException("User with id ${username} not found")
-        }
-        else throw EventNotFoundException("Event with id ${eventId} not found")
-    }
 
-    fun getDisliked(username: String, eventId: Long): Boolean {
-        if (repository.existsById(eventId)) {
-            val event = repository.findById(eventId).get()
-            if (userService.existsByUsername(username)) {
-                val user = User.fromDto(userService.getByUsername(username))
-                if (event.dislikedByUserList.contains(user))
-                    return true
-                return false
-            }
-            else throw UserNotFoundException("User with id ${username} not found")
-        }
-        else throw EventNotFoundException("Event with id ${eventId} not found")
-    }
 
     fun getPaginated(page: Int, size: Int?, title: String?, username: String?): EventsDTO {
 
@@ -72,8 +47,24 @@ class EventService(
         else throw EventNotFoundException("Not found event with id $id")
     }
 
-    fun getByDistance(latitud: Double, longitud: Double, distance: Double, page: Int, size: Int?): EventsDTO{
-        var response = repository.findByDistance(latitud, longitud, distance, page, if(size ==null) 1000 else size!!)
+    fun getAttendedEvents(username: String): EventsDTO {
+        if (userService.existsByUsername(username)) {
+            val user = User.fromDto(userService.getByUsername(username))
+
+            return EventsDTO(repository.findByAttendees(user).map { it.toDto() }, 0, 0)
+        } else throw Exception("Exception")
+    }
+
+    fun getCreatedEvents(username: String): EventsDTO {
+        if (userService.existsByUsername(username)) {
+            val user = User.fromDto(userService.getByUsername(username))
+
+            return EventsDTO(repository.findByUser(user).map { it.toDto() }, 0, 0)
+        } else throw Exception("Exception")
+    }
+
+    fun getByDistance(latitud: Double, longitud: Double, distance: Double, page: Int, size: Int?): EventsDTO {
+        var response = repository.findByDistance(latitud, longitud, distance, page, if (size == null) 1000 else size!!)
         return EventsDTO(response.map { it.toDto() }, page, response.size)
     }
 
@@ -82,10 +73,18 @@ class EventService(
         event.createdDate = LocalDateTime.now()
         event.lastUpdate = event.createdDate
         event.attendeesCount = 0
+        event.likes = 0
+        event.dislikes = 0
         return repository.save(Event.fromDto(event, user))
     }
 
     fun remove(username: String, id: Long) {
+        if (attendanceService.deleteAttendancesOnDeleteEvent(username, id, true)
+                || likeService.deleteLikesOnDeleteEvent(username, id)
+                || likeService.deleteDislikesOnDeleteEvent(username, id))
+            repository.deleteById(id)
+        else
+            throw EventNotFoundException("Not found event with id $id")
         var found = false
         for (i in 0..userService.getByUsername(username).roles.size - 1) {
             println(userService.getByUsername(username).roles.toList()[i].name)
@@ -157,49 +156,5 @@ class EventService(
             return EventsDTO(eventsContent, events.number, events.size)
         }
         else throw Exception("Not an admin")
-    }
-
-    fun likeEvent(id: Long, username: String): Event? {
-        return if (repository.existsById(id)) {
-            var event = repository.findById(id).get()
-            try {
-                userService.getByUsername(username).let {
-                    if (event.likedByUserList.contains(User.fromDto(it))) {
-                        event.likedByUserList.remove(User.fromDto(it))
-                    } else {
-                        event.likedByUserList.add(User.fromDto(it))
-                    }
-                    if (event.dislikedByUserList.contains(User.fromDto(it))) {
-                        event.dislikedByUserList.remove(User.fromDto(it))
-                    }
-                    repository.save(event)
-                    return event
-                }
-            } catch (e: Exception) {
-                return null;
-            }
-        } else throw EventNotFoundException("Not found event with id $id")
-    }
-
-    fun dislikeEvent(id: Long, username: String): Event? {
-        return if (repository.existsById(id)) {
-            var event = repository.findById(id).get()
-            try {
-                userService.getByUsername(username).let {
-                    if (event.dislikedByUserList.contains(User.fromDto(it))) {
-                        event.dislikedByUserList.remove(User.fromDto(it))
-                    } else {
-                        event.dislikedByUserList.add(User.fromDto(it))
-                    }
-                    if (event.likedByUserList.contains(User.fromDto(it))) {
-                        event.likedByUserList.remove(User.fromDto(it))
-                    }
-                    repository.save(event)
-                    return event
-                }
-            } catch (e: Exception) {
-                return null;
-            }
-        } else throw EventNotFoundException("Not found event with id $id")
     }
 }

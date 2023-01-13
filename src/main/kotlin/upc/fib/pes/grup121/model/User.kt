@@ -25,6 +25,12 @@ data class User(
     )
     @JsonIgnoreProperties("attendees")
     val attendingEvents: MutableList<Event>,
+    @ManyToMany(mappedBy = "likedByUserList")
+    @JsonIgnoreProperties("eventsLiked")
+    val eventsLiked: MutableList<Event>,
+    @ManyToMany(mappedBy = "dislikedByUserList")
+    @JsonIgnoreProperties("eventsDisliked")
+    val eventsDisliked: MutableList<Event>,
 ) {
     fun toDto(): UserDTO = UserDTO(
         id = this.id,
@@ -47,6 +53,8 @@ data class User(
                 createdDate = dto.createdDate,
                 lastUpdate = dto.lastUpdate,
                 attendingEvents = mutableListOf(),
+                eventsLiked = mutableListOf(),
+                eventsDisliked = mutableListOf(),
             )
         }
 
@@ -60,6 +68,8 @@ data class User(
                 createdDate = dto.createdDate ?: default.createdDate,
                 lastUpdate = dto.lastUpdate ?: default.lastUpdate,
                 attendingEvents = default.attendingEvents,
+                eventsLiked = default.eventsLiked,
+                eventsDisliked = default.eventsDisliked,
             )
         }
     }

@@ -34,4 +34,8 @@ interface EventRepository : CrudRepository<Event, Long>, PagingAndSortingReposit
     fun findByReportedIsTrue(pageable: Pageable): Page<Event>
 
     fun findByTitleContainingAndReportedIsTrue(title: String, pageable: Pageable): Page<Event>
+
+    fun findByUser(user: User): MutableList<Event>
+
+    fun findByAttendees(user: User): MutableList<Event>
 }
