@@ -35,9 +35,9 @@ class AttendanceService(
         return AttendanceDTO(eventId = updateAttendingEvents(username, eventId, false))
     }
 
-    fun deleteAttendancesOnDeleteEvent(username: String, eventId: Long): Boolean {
-        if (eventRepository.existsById(eventId)
-            && eventRepository.findById(eventId).get().user.id == userRepository.findByUsername(username).id) {
+    fun deleteAttendancesOnDeleteEvent(username: String, eventId: Long, found: Boolean): Boolean {
+        if (found || (eventRepository.existsById(eventId)
+            && eventRepository.findById(eventId).get().user.id == userRepository.findByUsername(username).id)) {
             val event = eventRepository.findById(eventId).get()
             val users = userRepository.findByAttendingEvents(event)
             users.forEach { user ->

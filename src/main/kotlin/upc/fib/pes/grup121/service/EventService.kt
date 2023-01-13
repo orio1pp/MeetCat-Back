@@ -3,6 +3,7 @@ package upc.fib.pes.grup121.service
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import upc.fib.pes.grup121.dto.Events.EventDTO
 import upc.fib.pes.grup121.dto.Events.EventsDTO
@@ -12,6 +13,7 @@ import upc.fib.pes.grup121.model.Event
 import upc.fib.pes.grup121.model.User
 import upc.fib.pes.grup121.repository.EventRepository
 import java.time.LocalDateTime
+import java.util.stream.IntStream.range
 
 @Service
 class EventService(
@@ -83,6 +85,17 @@ class EventService(
             repository.deleteById(id)
         else
             throw EventNotFoundException("Not found event with id $id")
+        var found = false
+        for (i in 0..userService.getByUsername(username).roles.size - 1) {
+            println(userService.getByUsername(username).roles.toList()[i].name)
+            found = userService.getByUsername(username).roles.toList()[i].name.equals("admin")
+        }
+        if ((repository.existsById(id) && repository.findById(id).get().user.id == userService.getByUsername(username).id) || found) {
+            if (attendanceService.deleteAttendancesOnDeleteEvent(username, id, found))
+                repository.deleteById(id)
+            else
+                throw EventNotFoundException("Not found event with id $id")
+        }
     }
 
     fun update(username: String, id: Long, event: EventDTO): Event {
@@ -93,26 +106,55 @@ class EventService(
     }
 
     fun report(id: Long, reported: Boolean): Event {
-        var reportedEvent: Event? = repository.findByIdOrNull(id)
-        return if (reportedEvent != null) {
-            reportedEvent.lastUpdate = LocalDateTime.now()
-            reportedEvent.reported = reported
-            repository.save(reportedEvent)
-        } else throw EventNotFoundException("Not found event with id $id")
+        if (reported) {
+            var reportedEvent: Event? = repository.findByIdOrNull(id)
+            return if (reportedEvent != null) {
+                reportedEvent.lastUpdate = LocalDateTime.now()
+                reportedEvent.reported = reported
+                repository.save(reportedEvent)
+            } else throw EventNotFoundException("Not found event with id $id")
+        }
+        else if (!reported) {
+            var found = false
+            val list = userService.getByUsername(SecurityContextHolder.getContext().authentication.name).roles.toList()
+            for (i in 0..list.size - 1) {
+                found = list[i].name.equals("admin")
+            }
+            if (found) {
+                var reportedEvent: Event? = repository.findByIdOrNull(id)
+                return if (reportedEvent != null) {
+                    reportedEvent.lastUpdate = LocalDateTime.now()
+                    reportedEvent.reported = reported
+                    repository.save(reportedEvent)
+                } else throw EventNotFoundException("Not found event with id $id")
+            }
+            else throw Exception("Not an admin")
+        }
+        else throw EventNotFoundException("Not found event with id $id")
     }
 
     fun getReported(page: Int, size: Int?, title: String?): EventsDTO {
-        var events: Page<Event>
-        if (title != null)
-            events = repository.findByTitleContainingAndReportedIsTrue(title, PageRequest.of(page, size
-                    ?: repository.count().toInt()))
-        else
-            events = repository.findByReportedIsTrue(PageRequest.of(page, size ?: repository.count().toInt()))
-
-        val eventsContent = events.content.map {
-            it.toDto()
+        var found = false
+        val list = userService.getByUsername(SecurityContextHolder.getContext().authentication.name).roles.toList()
+        for (i in 0..list.size - 1) {
+            found = list[i].name.equals("admin")
         }
+        if (found) {
+            var events: Page<Event>
+            if (title != null)
+                events = repository.findByTitleContainingAndReportedIsTrue(
+                    title,
+                    PageRequest.of(page, size ?: repository.count().toInt())
+                )
+            else
+                events = repository.findByReportedIsTrue(PageRequest.of(page, size ?: repository.count().toInt()))
 
-        return EventsDTO(eventsContent, events.number, events.size)
+            val eventsContent = events.content.map {
+                it.toDto()
+            }
+
+            return EventsDTO(eventsContent, events.number, events.size)
+        }
+        else throw Exception("Not an admin")
     }
 }
