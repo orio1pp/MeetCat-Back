@@ -1,12 +1,18 @@
 package upc.fib.pes.grup121.controller
 
-import org.springframework.data.repository.query.Param
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.security.authentication.jaas.AuthorityGranter
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
-import upc.fib.pes.grup121.dto.EventsDTO
+import upc.fib.pes.grup121.dto.Attendance.AttendanceDTO
+import upc.fib.pes.grup121.dto.Events.EventsDTO
 import upc.fib.pes.grup121.model.Event
-import upc.fib.pes.grup121.model.EventDTO
+import upc.fib.pes.grup121.dto.Events.EventDTO
+import upc.fib.pes.grup121.model.Role
 import upc.fib.pes.grup121.service.EventService
+import java.security.AuthProvider
 
 @RequestMapping("/events")
 @RestController
@@ -14,9 +20,36 @@ class EventController (val service: EventService){
     @GetMapping
     fun getEvents(
             @RequestParam("page", defaultValue = "0") page: Int,
-            @RequestParam("size") size: Int?
+            @RequestParam("size") size: Int?,
+            @RequestParam("title") title: String?,
+            @RequestParam("username") username: String?,
     ): EventsDTO {
-        return service.getPaginated(page, size)
+        return service.getPaginated(page, size, title, username)
+    }
+    @GetMapping("/nearest")
+    fun getEventsByDistance(
+            @RequestParam("page", defaultValue = "0") page: Int,
+            @RequestParam("size") size: Int?,
+            @RequestParam("latitude", defaultValue = "41.386575") latitude: Double,
+            @RequestParam("longitude", defaultValue = "2.170068") longitude: Double,
+            @RequestParam("distance", defaultValue = "0.5") distance: Double
+    ): EventsDTO {
+        //distance is a double in km
+        return service.getByDistance(latitude, longitude, distance, page, size)
+    }
+
+    @GetMapping("/coming")
+    fun getEventsAttended(
+    ): EventsDTO {
+        val username = SecurityContextHolder.getContext().authentication.name
+        return service.getAttendedEvents(username)
+    }
+
+    @GetMapping("/me")
+    fun getMyEvents(
+    ): EventsDTO {
+        val username = SecurityContextHolder.getContext().authentication.name
+        return service.getCreatedEvents(username)
     }
 
     @GetMapping("/{id}")
@@ -27,20 +60,46 @@ class EventController (val service: EventService){
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun saveEvent(@RequestBody event: EventDTO) {
-        service.create(event)
+        val username = SecurityContextHolder.getContext().authentication.name
+        service.create(username, event)
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteEvent(@PathVariable id: Long){
-        service.remove(id)
+        val username = SecurityContextHolder.getContext().authentication.name
+        service.remove(username, id)
     }
 
     @PutMapping("/{id}")
     fun updateEvent(
         @PathVariable id: Long, @RequestBody event: EventDTO
     ) {
-        service.update(id, event)
+        val username = SecurityContextHolder.getContext().authentication.name
+        service.update(username, id, event)
+    }
+
+    @PutMapping("/{id}/report")
+    fun reportEvent(
+        @PathVariable id: Long
+    ) {
+        service.report(id, true)
+    }
+
+    @PutMapping("/{id}/unreport") //NOMES PER ADMINS TODO
+    fun unreportEvent(
+        @PathVariable id: Long
+    ) {
+        service.report(id, false)
+    }
+
+    @GetMapping("/reported") //NOMES PER ADMINS TODO
+    fun getReportedEvents(
+        @RequestParam("page", defaultValue = "0") page: Int,
+        @RequestParam("size") size: Int?,
+        @RequestParam("title") title: String?,
+    ): EventsDTO  {
+        return service.getReported(page, size, title)
     }
 
 

@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.Repository
+import upc.fib.pes.grup121.model.Event
 import upc.fib.pes.grup121.model.User
 
 interface UserRepository : CrudRepository<User, Long> {
@@ -11,4 +12,10 @@ interface UserRepository : CrudRepository<User, Long> {
     fun findByUsername(username: String): User
 
     fun existsByUsername(username: String): Boolean
+
+    fun findByAttendingEvents(event: Event): MutableList<User>
+
+    fun findByEventsLiked(event: Event): MutableList<User>
+
+    fun findByEventsDisliked(event: Event): MutableList<User>
 }

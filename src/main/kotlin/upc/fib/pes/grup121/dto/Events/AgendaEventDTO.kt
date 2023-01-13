@@ -1,6 +1,7 @@
-package upc.fib.pes.grup121.dto
+package upc.fib.pes.grup121.dto.Events
 
 import upc.fib.pes.grup121.model.Event
+import upc.fib.pes.grup121.model.User
 import java.time.LocalDateTime
 
 data class AgendaEventDTO(
@@ -34,19 +35,27 @@ data class AgendaEventDTO(
     var imgapp : String?,
     var descripcio_html : String?
 ){
-    fun toEvent(): Event = Event(
+    fun toEvent(user: User): Event = Event(
         id = null,
         title = this.denominaci!!,
+        user = user,
         description = this.descripcio,
         subtitle = this.subt_tol,
         initDate = this.data_inici!!,
         endDate = this.data_fi,
         link = this.url,
         placeName = this.comarca_i_municipi,
-        location = this.latitud+','+this.longitud,
+        latitud = if(this.latitud!= null) this.latitud!!.toDouble() else 0.toDouble(),
+        longitud = if(this.longitud!= null) this.longitud!!.toDouble() else 0.toDouble(),
         address = this.adre_a,
         agendaEventCode = this.codi,
         lastUpdate = null,
-        createdDate = null
+        createdDate = null,
+        attendees = mutableListOf(),
+        attendeesCount = 0,
+        likedByUserList = mutableListOf(),
+        dislikedByUserList = mutableListOf(),
+        likes = 0,
+        dislikes = 0,
     )
 }

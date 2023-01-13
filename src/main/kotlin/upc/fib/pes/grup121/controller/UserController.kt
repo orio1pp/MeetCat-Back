@@ -10,10 +10,11 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
-import upc.fib.pes.grup121.dto.UserDTO
+import upc.fib.pes.grup121.dto.User.UserDTO
 import upc.fib.pes.grup121.model.Role
 import upc.fib.pes.grup121.model.User
 import upc.fib.pes.grup121.service.UserService
@@ -43,7 +44,13 @@ class UserController(val service: UserService) {
     }
 
     @GetMapping("/name")
-    fun getUser(username: String): ResponseEntity<User> {
+    fun getUser(username: String): ResponseEntity<UserDTO> {
+        return ResponseEntity.ok().body(service.getByUsername(username))
+    }
+
+    @GetMapping("/me")
+    fun getUser(): ResponseEntity<UserDTO> {
+        val username = SecurityContextHolder.getContext().authentication.name
         return ResponseEntity.ok().body(service.getByUsername(username))
     }
 
@@ -56,12 +63,13 @@ class UserController(val service: UserService) {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteUser(@PathVariable id: Long) {
-        service.remove(id)
+    fun deleteUser(@PathVariable id: Long): ResponseEntity<Optional<User>> {
+        val user = service.remove(id)
+        return ResponseEntity.ok().body(user)
     }
 
     @PutMapping("/{id}")
-    fun updateUser(@PathVariable id: Long, @RequestBody user: UserDTO): ResponseEntity<User> {
+    fun updateUser(@PathVariable id: Long, @RequestBody user: UserDTO): ResponseEntity<UserDTO> {
         return ResponseEntity.ok().body(service.update(id, user))
     }
 
@@ -75,7 +83,7 @@ class UserController(val service: UserService) {
                 var verifier: JWTVerifier = JWT.require(algorithm).build()
                 var decodedJWT: DecodedJWT = verifier.verify(refresh_token)
                 var username: String = decodedJWT.subject
-                var user : User = service.getByUsername(username)
+                var user : User = User.fromDto(service.getByUsername(username))
 
                 var access_token: String =
                     JWT.create().withSubject(user.username).withExpiresAt(Date(System.currentTimeMillis() + 30 * 60 * 1000))
