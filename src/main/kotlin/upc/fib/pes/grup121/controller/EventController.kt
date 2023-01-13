@@ -34,6 +34,20 @@ class EventController (val service: EventService){
         return service.getByDistance(latitude, longitude, distance, page, size)
     }
 
+    @GetMapping("/coming")
+    fun getEventsAttended(
+    ): EventsDTO {
+        val username = SecurityContextHolder.getContext().authentication.name
+        return service.getAttendedEvents(username)
+    }
+
+    @GetMapping("/me")
+    fun getMyEvents(
+    ): EventsDTO {
+        val username = SecurityContextHolder.getContext().authentication.name
+        return service.getCreatedEvents(username)
+    }
+
     @GetMapping("/{id}")
     fun getEvent(@PathVariable id: Long) :Event{
         return service.getById(id)
@@ -82,30 +96,6 @@ class EventController (val service: EventService){
         @RequestParam("title") title: String?,
     ): EventsDTO  {
         return service.getReported(page, size, title)
-    }
-
-    @PutMapping("/{id}/like")
-    fun likeEvent(@PathVariable id: Long, @RequestParam username: String): Event? {
-        //val username: String = SecurityContextHolder.getContext().authentication.name
-        return service.likeEvent(id, username)
-    }
-
-    @PutMapping("/{id}/dislike")
-    fun dislikeEvent(@PathVariable id: Long, @RequestParam username: String): Event? {
-        //val username: String = SecurityContextHolder.getContext().authentication.name
-        return service.dislikeEvent(id, username)
-    }
-
-    @GetMapping("/{id}/liked")
-    fun getLiked(@PathVariable id: Long, @RequestParam username: String): ResponseEntity<Boolean>{
-        //val username: String = SecurityContextHolder.getContext().authentication.name
-        return ResponseEntity.ok().body(service.getLiked(username, id))
-    }
-
-    @GetMapping("/{id}/disliked")
-    fun getDisliked(@PathVariable id: Long, @RequestParam username: String): ResponseEntity<Boolean>{
-        //val username: String = SecurityContextHolder.getContext().authentication.name
-        return ResponseEntity.ok().body(service.getDisliked(username, id))
     }
 
 

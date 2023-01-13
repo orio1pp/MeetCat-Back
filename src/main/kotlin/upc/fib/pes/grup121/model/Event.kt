@@ -33,8 +33,24 @@ data class Event(
     var attendees: MutableList<User>,
     var attendeesCount: Int,
     var reported: Boolean? = false,
-    @ManyToMany var likedByUserList: MutableCollection<User> = mutableListOf<User>(),
-    @ManyToMany var dislikedByUserList: MutableCollection<User> = mutableListOf<User>(),
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "likes",
+            joinColumns = [JoinColumn(name = "event_id", referencedColumnName = "id")],
+            inverseJoinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")]
+    )
+    @JsonIgnoreProperties("eventsLiked")
+    var likedByUserList: MutableList<User>,
+    var likes: Int,
+    @JoinTable(
+            name = "dislikes",
+            joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
+            inverseJoinColumns = [JoinColumn(name = "event_id", referencedColumnName = "id")]
+    )
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("eventsDisliked")
+    var dislikedByUserList: MutableList<User>,
+    var dislikes: Int,
 ){
     fun toDto(): EventDTO = EventDTO(
         id = this.id,
@@ -52,8 +68,8 @@ data class Event(
         address = this.address,
         agendaEventCode = this.agendaEventCode,
         attendeesCount = this.attendeesCount,
-        likedByUserList = this.likedByUserList,
-        dislikedByUserList = this.dislikedByUserList
+        likes = this.likes,
+        dislikes = this.dislikes,
     )
 
 
@@ -77,10 +93,11 @@ data class Event(
             agendaEventCode = dto.agendaEventCode,
             attendees = mutableListOf(),
             attendeesCount = dto.attendeesCount,
-            likedByUserList = dto.likedByUserList,
-            dislikedByUserList = dto.dislikedByUserList,
-            reported = false
-
+            likedByUserList = mutableListOf(),
+            dislikedByUserList = mutableListOf(),
+            reported = false,
+            likes = dto.likes,
+            dislikes = dto.dislikes,
   )
 
         fun fromDto(dto: EventDTO, default: Event) = Event(
@@ -101,7 +118,11 @@ data class Event(
             agendaEventCode = dto.agendaEventCode ?: default.agendaEventCode,
             attendees = mutableListOf(),
             attendeesCount = dto.attendeesCount,
-            reported = false
+            reported = false,
+            likedByUserList = default.likedByUserList,
+            dislikedByUserList = default.dislikedByUserList,
+            likes = dto.likes,
+            dislikes = dto.dislikes,
         )
 
     }

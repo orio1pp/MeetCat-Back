@@ -19,8 +19,8 @@ data class EventDTO(
     var createdDate: LocalDateTime? = null,
     var agendaEventCode: Long?,
     var attendeesCount: Int,
-    var likedByUserList: MutableCollection<User> = mutableListOf<User>(),
-    var dislikedByUserList: MutableCollection<User> = mutableListOf<User>(),
+    var likes: Int,
+    var dislikes: Int,
 ){
 
 }

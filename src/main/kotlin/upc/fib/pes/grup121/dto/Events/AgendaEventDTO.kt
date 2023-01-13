@@ -53,5 +53,9 @@ data class AgendaEventDTO(
         createdDate = null,
         attendees = mutableListOf(),
         attendeesCount = 0,
+        likedByUserList = mutableListOf(),
+        dislikedByUserList = mutableListOf(),
+        likes = 0,
+        dislikes = 0,
     )
 }
