@@ -2,13 +2,17 @@ package upc.fib.pes.grup121.controller
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.authentication.jaas.AuthorityGranter
+import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import upc.fib.pes.grup121.dto.Attendance.AttendanceDTO
 import upc.fib.pes.grup121.dto.Events.EventsDTO
 import upc.fib.pes.grup121.model.Event
 import upc.fib.pes.grup121.dto.Events.EventDTO
+import upc.fib.pes.grup121.model.Role
 import upc.fib.pes.grup121.service.EventService
+import java.security.AuthProvider
 
 @RequestMapping("/events")
 @RestController

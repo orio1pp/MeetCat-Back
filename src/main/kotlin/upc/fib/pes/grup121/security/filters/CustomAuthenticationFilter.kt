@@ -46,13 +46,13 @@ class CustomAuthenticationFilter(
             Algorithm.HMAC256("secret".toByteArray()) //cambiar esto, la encriptacion habria que sacarla de algun sitio securizado.
 
         var access_token: String =
-            JWT.create().withSubject(user.username).withExpiresAt(Date(System.currentTimeMillis() + 10 * 60 * 1000))
+            JWT.create().withSubject(user.username).withExpiresAt(Date(System.currentTimeMillis() + 150 * 60 * 1000))
                 .withIssuer(request?.requestURL.toString())
                 .withClaim("roles", user.authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm)
 
         var refresh_token: String =
-            JWT.create().withSubject(user.username).withExpiresAt(Date(System.currentTimeMillis() + 30 * 60 * 1000))
+            JWT.create().withSubject(user.username).withExpiresAt(Date(System.currentTimeMillis() + 300 * 60 * 1000))
                 .withIssuer(request?.requestURL.toString())
                 .sign(algorithm)
 
