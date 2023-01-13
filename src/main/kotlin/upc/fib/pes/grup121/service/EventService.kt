@@ -79,7 +79,7 @@ class EventService(
     }
 
     fun remove(username: String, id: Long) {
-        if (attendanceService.deleteAttendancesOnDeleteEvent(username, id)
+        if (attendanceService.deleteAttendancesOnDeleteEvent(username, id, true)
                 || likeService.deleteLikesOnDeleteEvent(username, id)
                 || likeService.deleteDislikesOnDeleteEvent(username, id))
             repository.deleteById(id)
