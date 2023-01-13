@@ -84,6 +84,30 @@ class EventController (val service: EventService){
         return service.getReported(page, size, title)
     }
 
+    @PutMapping("/{id}/like")
+    fun likeEvent(@PathVariable id: Long, @RequestParam username: String): Event? {
+        //val username: String = SecurityContextHolder.getContext().authentication.name
+        return service.likeEvent(id, username)
+    }
+
+    @PutMapping("/{id}/dislike")
+    fun dislikeEvent(@PathVariable id: Long, @RequestParam username: String): Event? {
+        //val username: String = SecurityContextHolder.getContext().authentication.name
+        return service.dislikeEvent(id, username)
+    }
+
+    @GetMapping("/{id}/liked")
+    fun getLiked(@PathVariable id: Long, @RequestParam username: String): ResponseEntity<Boolean>{
+        //val username: String = SecurityContextHolder.getContext().authentication.name
+        return ResponseEntity.ok().body(service.getLiked(username, id))
+    }
+
+    @GetMapping("/{id}/disliked")
+    fun getDisliked(@PathVariable id: Long, @RequestParam username: String): ResponseEntity<Boolean>{
+        //val username: String = SecurityContextHolder.getContext().authentication.name
+        return ResponseEntity.ok().body(service.getDisliked(username, id))
+    }
+
 
 //        listOf(
 //        Event("1", "Correbars","description"),
