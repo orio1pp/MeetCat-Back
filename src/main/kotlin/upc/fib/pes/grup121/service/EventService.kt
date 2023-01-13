@@ -88,7 +88,7 @@ class EventService(
         var found = false
         for (i in 0..userService.getByUsername(username).roles.size - 1) {
             println(userService.getByUsername(username).roles.toList()[i].name)
-            found = userService.getByUsername(username).roles.toList()[i].name.equals("ADMIN")
+            found = userService.getByUsername(username).roles.toList()[i].name.equals("admin")
         }
         if ((repository.existsById(id) && repository.findById(id).get().user.id == userService.getByUsername(username).id) || found) {
             if (attendanceService.deleteAttendancesOnDeleteEvent(username, id, found))
