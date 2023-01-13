@@ -12,6 +12,7 @@ import upc.fib.pes.grup121.model.Event
 import upc.fib.pes.grup121.model.User
 import upc.fib.pes.grup121.repository.EventRepository
 import java.time.LocalDateTime
+import java.util.stream.IntStream.range
 
 @Service
 class EventService(
@@ -84,10 +85,17 @@ class EventService(
     }
 
     fun remove(username: String, id: Long) {
-        if (attendanceService.deleteAttendancesOnDeleteEvent(username, id))
-            repository.deleteById(id)
-        else
-            throw EventNotFoundException("Not found event with id $id")
+        var found = false
+        for (i in 0..userService.getByUsername(username).roles.size - 1) {
+            println(userService.getByUsername(username).roles.toList()[i].name)
+            found = userService.getByUsername(username).roles.toList()[i].name.equals("ADMIN")
+        }
+        if ((repository.existsById(id) && repository.findById(id).get().user.id == userService.getByUsername(username).id) || found) {
+            if (attendanceService.deleteAttendancesOnDeleteEvent(username, id, found))
+                repository.deleteById(id)
+            else
+                throw EventNotFoundException("Not found event with id $id")
+        }
     }
 
     fun update(username: String, id: Long, event: EventDTO): Event {

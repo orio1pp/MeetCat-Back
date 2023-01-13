@@ -32,6 +32,8 @@ class SecurityConfig(
     override fun configure(http: HttpSecurity) {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        http.authorizeRequests().antMatchers("/reported").hasRole("admin")
+        http.authorizeRequests().antMatchers("/{id}/unreport").hasRole("admin")
         http.authorizeRequests().antMatchers("/login", "/users/refresh/token", "/**").permitAll()
         http.authorizeRequests().anyRequest().authenticated()
         http.addFilter(CustomAuthenticationFilter(authenticationManagerBean()))
